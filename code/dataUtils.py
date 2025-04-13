@@ -9,10 +9,15 @@ import numpy as np
 #     TETRAD = 2
 
 def loadSachsDataset():
-    dataset = pd.read_csv("../data/sachs/data/sachs.2005.continuous.txt", sep=r'\s+')
+    # dataset = pd.read_csv("../data/sachs/data/sachs.2005.continuous.txt", sep=r'\s+')
+    dataset = pd.read_csv("../data/sachs/data/sachs.2005.logxplus10.continuous.txt", sep=r'\s+')
     # if format == Format.TETRAD:
     # dataset =
 
+    return dataset
+
+def loadSachsDatasetWithExperiments():
+    dataset = pd.read_csv("../data/sachs/data/sachs.2005.continuous.discrete.experimental.mixed.maximum.2.txt", sep=r'\s+')
     return dataset
 
 class IHDPFormat(Enum):
