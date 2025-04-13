@@ -4,12 +4,12 @@ from pathlib import Path
 import numpy as np
 # from pytetrad import resources
 
-class Format(Enum):
-    RAW = 1
-    TETRAD = 2
+# class Format(Enum):
+#     RAW = 1
+#     TETRAD = 2
 
-def loadSachsDataset(format: Format = Format.RAW):
-    dataset = pd.read_csv("../data/sachs.2005.continuous.txt", sep=r'\s+')
+def loadSachsDataset():
+    dataset = pd.read_csv("../data/sachs/data/sachs.2005.continuous.txt", sep=r'\s+')
     # if format == Format.TETRAD:
     # dataset =
 

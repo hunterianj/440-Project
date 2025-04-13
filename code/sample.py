@@ -2,13 +2,9 @@
 import dataUtils
 import pytetrad.tools.TetradSearch as ts
 
-ihdpDataset = dataUtils.loadIHDPDataset()
-print(ihdpDataset)
-
-# sachsDataset = dataUtils.loadSachsDataset()
-# print(sachsDataset.head())
-# data = sachsDataset.astype({col: "float64" for col in sachsDataset.columns})
-# # print(data)
+# ihdpDataset = dataUtils.loadIHDPDataset()
+# print(ihdpDataset.head())
+# data = ihdpDataset.astype({col: "float64" for col in ihdpDataset.columns})
 # search = ts.TetradSearch(data)
 # search.set_verbose(False)
 # search.use_sem_bic()
@@ -17,6 +13,19 @@ print(ihdpDataset)
 # print("\nPC\n")
 # search.run_pc()
 # print(search.get_string())
+
+sachsDataset = dataUtils.loadSachsDataset()
+print(sachsDataset.head())
+data = sachsDataset.astype({col: "float64" for col in sachsDataset.columns})
+# print(data)
+search = ts.TetradSearch(data)
+search.set_verbose(False)
+search.use_sem_bic()
+search.use_fisher_z(alpha=0.05)
+
+print("\nPC\n")
+search.run_pc()
+print(search.get_string())
 #
 # print('\nFCI\n')
 # search.run_fci()
