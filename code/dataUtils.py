@@ -20,6 +20,13 @@ def loadSachsDatasetWithExperiments():
     dataset = pd.read_csv("../data/sachs/data/sachs.2005.continuous.discrete.experimental.mixed.maximum.2.txt", sep=r'\s+')
     return dataset
 
+def loadSachsGroundTruth():
+    # dataset = pd.read_csv("../data/sachs/ground_truth/sachs.2005.ground.truth.graph.txt", sep=r'\s+')
+    # if format == Format.TETRAD:
+    dataset = ""
+
+    return dataset
+
 class IHDPFormat(Enum):
     TRAIN = 1
     TEST = 2
