@@ -2,6 +2,15 @@ import pandas as pd
 from enum import Enum
 from pathlib import Path
 import numpy as np
+from io import StringIO
+import re
+
+import sys
+sys.path.append("causal-learn")
+
+from causallearn.graph.Dag import Dag
+from causallearn.graph.GraphNode import GraphNode
+
 # from pytetrad import resources
 
 # class Format(Enum):
@@ -21,11 +30,33 @@ def loadSachsDatasetWithExperiments():
     return dataset
 
 def loadSachsGroundTruth():
-    # dataset = pd.read_csv("../data/sachs/ground_truth/sachs.2005.ground.truth.graph.txt", sep=r'\s+')
-    # if format == Format.TETRAD:
-    dataset = ""
+    # Read content and decode to string
+    f = open('../data/sachs/ground_truth/sachs.2005.ground.truth.graph.txt')
+    content = f.read().splitlines()
+    f.close()
+    
+    # see https://github.com/cmu-phil/example-causal-datasets/blob/main/formatting.txt
+    edge_re = re.compile(r"(?<![^\s>])[0-9]+\. ([^\s]*) --> ([^\s]*)")
+    
+    if content[0] == "Graph Nodes:":
+        node_list = [GraphNode(name) for name in content[1].split(";")]
+        ground_truth_graph = Dag(node_list)
+        if content[3] == "Graph Edges:":
+            for i in range(4, len(content)):
+                line_str = content[i]
+                if line_str:
+                    line_edge = edge_re.match(content[i]).group(1, 2)
+                    node_from = ground_truth_graph.get_node(line_edge[0])
+                    node_to = ground_truth_graph.get_node(line_edge[1])
+                    ground_truth_graph.add_directed_edge(node_from, node_to)
+        else:
+            print("loadSachsGroundTruth: Failed to find any graph edges")
+            return ""
+    else:
+        print("loadSachsGroundTruth: Failed to find graph nodes")
+        return ""
 
-    return dataset
+    return ground_truth_graph
 
 class IHDPFormat(Enum):
     TRAIN = 1
@@ -66,3 +97,6 @@ def loadIHDPDataset(replication: int = 0, format: IHDPFormat = IHDPFormat.TRAIN)
     dataframe["treatment"] = t
     dataframe["outcome"] = yf
     return dataframe
+
+
+sachs_ground = loadSachsGroundTruth()

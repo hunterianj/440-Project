@@ -7,8 +7,10 @@ Created on Tue Apr 22 13:30:49 2025
 """
 
 import dataUtils
-import importlib  
-causal_learn = importlib.import_module("causal-learn")
+
+import sys
+sys.path.append("causal-learn")
+
 
 sachs_ground = dataUtils.loadSachsGroundTruth()
 
