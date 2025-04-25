@@ -1,13 +1,17 @@
 from causallearn.search.ConstraintBased import CCPG
+from causallearn.utils.cit import CIT
 import h5py
 import os
 from pytorch_lightning import seed_everything
 from CCPG.data import synthetic_instance  # vendor from authors
+from time import time
 
 os.makedirs("simulate-data/nsample", exist_ok=True)
 
 def simulated_data_test(nnodes: int, max_runs: int) -> bool:
     seed_everything(42)
+    alpha = 1e-3
+
     outdir = "simulate-data/nsample"
     os.makedirs(outdir, exist_ok=True)
 
@@ -29,7 +33,12 @@ def simulated_data_test(nnodes: int, max_runs: int) -> bool:
         succeeded = False
         while ns < 5000:
             samples = model.sample(ns)
+            cit = CIT(samples.T, "fisherz")
+            def ci_test(i: int, j: int, cond: set[int]) -> bool:
+                return cit(i, j, list(cond)) > alpha
+
             ci = CCPG.MemoizedCIT(samples.T, "fisherz", alpha=1e-3)
+            # comps, edges = CCPG.ccpg_alg(set(range(nnodes)), ci_test, verbose=False)
             comps, edges = CCPG.ccpg_alg(set(range(nnodes)), ci.is_ci, verbose=False)
 
             # check that every component is size 1
@@ -50,11 +59,14 @@ def simulated_data_test(nnodes: int, max_runs: int) -> bool:
 
     return True
 
+start = time()
 all_ok = True
 for nn in [5, 10, 15]:
     print(f"Testing nnodes={nn} …")
     if not simulated_data_test(nnodes=nn, max_runs=3):
         all_ok = False
+
+print(f"Elapsed time ={time() - start}")
 
 if all_ok:
     print("All CCPG recovery tests passed")
@@ -101,7 +113,10 @@ def compare_algs(nnodes=10, nsamples=500, alpha=1e-3):
     return (set_authors == set_ours) and (set(edges_authors) == set(edges_ours))
 
 seed_everything(42)
+start = time()
 for nn in [5, 10, 15]:
     for nsamples in [500, 1000, 2000, 4000]:
         print(f"Testing nnodes={nn}, nsamples={nsamples}...")
         compare_algs(nnodes=nn, nsamples=nsamples)
+
+print(f"Elapsed time ={time() - start}")
