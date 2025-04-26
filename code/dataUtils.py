@@ -17,6 +17,7 @@ from causallearn.graph.GraphNode import GraphNode
 #     RAW = 1
 #     TETRAD = 2
 
+
 def loadSachsDataset():
     # dataset = pd.read_csv("../data/sachs/data/sachs.2005.continuous.txt", sep=r'\s+')
     dataset = pd.read_csv("../data/sachs/data/sachs.2005.logxplus10.continuous.txt", sep=r'\s+')
@@ -25,9 +26,72 @@ def loadSachsDataset():
 
     return dataset
 
+
 def loadSachsDatasetWithExperiments():
     dataset = pd.read_csv("../data/sachs/data/sachs.2005.continuous.discrete.experimental.mixed.maximum.2.txt", sep=r'\s+')
     return dataset
+
+
+def loadSachsInterventionalContinuous():
+    df = pd.read_csv("../data/sachs/data/sachs.2005.continuous.discrete.experimental.mixed.maximum.2.txt", sep=r'\s+')
+    
+    interventions = {
+        (1, 0, 0, 0, 0, 0, 0, 0, 0): "obs",  # (853 samples) cd3_cd28 only (general pertubation)
+        (1, 1, 0, 0, 0, 0, 0, 0, 0): "obs",  # (901 samples) cd3_cd28 + icam2 (general pertubation)
+        (1, 0, 1, 0, 0, 0, 0, 0, 0): "akt",  # (911 samples) cd3_cd28 + aktinhib
+        (1, 0, 0, 1, 0, 0, 0, 0, 0): "pkc",  # (723 samples) cd3_cd28 + g0076 (inhibitor)
+        (1, 0, 0, 0, 1, 0, 0, 0, 0): "pip2", # (810 samples) cd3_cd28 + psitect
+        (1, 0, 0, 0, 0, 1, 0, 0, 0): "mek",  # (799 samples) cd3_cd28 + u-126
+        (1, 0, 0, 0, 0, 0, 1, 0, 0): "obs",  # (848 samples) cd3_cd28 + ly (P13k inhibitor - “subsequent” relation to Akt)
+        (0, 0, 0, 0, 0, 0, 0, 1, 0): "pkc",  # (913 samples) pma (activator)
+        (0, 0, 0, 0, 0, 0, 0, 0, 1): "pka"   # (707 samples) b2camp
+    }
+    
+    data_cols = ["raf", "mek", "plc", "pip2", "pip3", "erk", "akt", "pka", "pkc", "p38", "jnk"]
+    intv_cols = ["cd3_cd28", "icam2", "aktinhib", "g0076", "psitect", "u0126", "ly", "pma", "b2camp"]
+    
+    data = pd.DataFrame()
+    i_data = {
+        "akt":  pd.DataFrame(),
+        "pkc":  pd.DataFrame(),
+        "pip2": pd.DataFrame(),
+        "mek":  pd.DataFrame(),
+        "pka":  pd.DataFrame()
+    }
+    
+    for interv_row in interventions:
+        i_row = list(interv_row)
+        # TODO: This doesn't quite work... the idea is just to match interventional columns to tuple keys
+        # Alternately, we can just do this manually and make a new version of
+        # sachs.2005.continuous.discrete.experimental.mixed.maximum.2.txt with intervention numbers like
+        match_row = df[intv_cols].apply(lambda row: row == i_row, axis=1, broadcast=True)
+        _data = df.where(match_row)
+        if interventions[interv_row] == "obs":
+            data.append(_data)
+        else:
+            i_data[interventions[interv_row]].append(_data)
+        
+    return data, i_data.values(), [(key, data_cols.index(key)) for key in i_data.keys()]
+
+
+def loadSachsInterventionalDiscrete():
+    df = pd.read_csv("../data/sachs/data/sachs.interventional.txt", sep=r'\s+')
+    unique_ints = df["INT"].unique()
+    # get the list of intervention targets and list of dataframe associated with each intervention
+    intervention_targets = [(df.columns[idx], idx) for idx in unique_ints]
+    data_cols = [col for col in df.columns if col != "INT"]
+    data = pd.DataFrame()
+    i_data = []
+    for interv_idx in unique_ints:
+        _data = df[df["INT"] == interv_idx][data_cols]
+        if interv_idx != 0:
+            i_data.append(_data)
+        else:
+            data = _data
+        
+    unique_idxs = [i-1 for i in unique_ints]
+    return data, i_data, [(df.columns[i], set([i])) for i in unique_idxs if i >= 0]
+
 
 def loadSachsGroundTruth():
     # Read content and decode to string
@@ -57,6 +121,7 @@ def loadSachsGroundTruth():
         return ""
 
     return ground_truth_graph
+
 
 class IHDPFormat(Enum):
     TRAIN = 1
@@ -97,6 +162,3 @@ def loadIHDPDataset(replication: int = 0, format: IHDPFormat = IHDPFormat.TRAIN)
     dataframe["treatment"] = t
     dataframe["outcome"] = yf
     return dataframe
-
-
-sachs_ground = loadSachsGroundTruth()

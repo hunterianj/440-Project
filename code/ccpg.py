@@ -186,7 +186,7 @@ def ccpg(
 
 def i_ccpg(
         data: ndarray,
-        i_data: ndarray,
+        i_data: list[ndarray],
         i_nodes: list[Set[int]],
         alpha_or_penalty: float = None,
         ci_test_name: str = "fisherz",
@@ -196,17 +196,14 @@ def i_ccpg(
     # Setup ci_test:
     ci = MemoizedCIT(data, ci_test_name, alpha_or_penalty, **kwargs)
     
-    n_interv = i_data.shape[0]
-    if len(i_nodes) != n_interv:
-        raise ValueError(f"Mismatch in length of i_idata ({n_interv}) and i_nodes ({len(i_nodes)})")
-    i_cis = []
-    for i in range(n_interv):
-        i_cis.append(MemoizedCIT(np.squeeze(i_data[i,:,:], axis=0), ci_test_name, alpha_or_penalty, **kwargs).is_ci)
-
+    if len(i_nodes) != len(i_data):
+        raise ValueError(f"Mismatch in # of interventions: i_idata ({len(i_data)}) and i_nodes ({len(i_nodes)})")
+    i_cis = [MemoizedCIT(i_d, ci_test_name, alpha_or_penalty, **kwargs).is_ci for i_d in i_data]
+        
     # Discover CCPG nodes and edges
     n, d = data.shape
-    if i_data.shape[-1] != d:
-        raise ValueError(f"Mismatch in dimn of data {d} and i_idata {i_data.shape[-1]}")
+    if i_data[0].shape[-1] != d:
+        raise ValueError(f"Mismatch in # of nodes: data {d} and i_idata {i_data[0].shape[-1]}")
     components, edges = ccpg_alg(set(range(d)), ci.is_ci, verbose, i_nodes, i_cis)
 
     # print(f"Components: {components}")
