@@ -12,12 +12,15 @@ from causallearn.graph.GraphClass import CausalGraph
 from causallearn.utils.cit import *
 
 
-def prefix_set(nodes: Set[int], ci_test: Callable[[int, int, set[int]], bool], pset: Set[int], verbose: bool = False, \
-               i_nodes: list[Set[int]] = [], i_ci_tests: list[Callable[[int, int, set[int]], bool]] = []) -> \
-        Set[int]:
+def prefix_set(nodes: Set[int],
+               ci_test: Callable[[int, int, set[int]], bool],
+               pset: Set[int], verbose: bool = False,
+               i_nodes: list[Set[int]] = [],
+               i_ci_tests: list[Callable[[int, int, set[int]], bool]] = []
+               ) -> Set[int]:
     # j
     j_set = set()
-    if i_nodes:
+    if len(i_nodes) > 0:
         for i in range(len(i_nodes)):
             i_min_s = i_nodes[i] - pset
             des_i_min_s_min_i_min_s = set()
@@ -92,13 +95,16 @@ def set_ci(ci_test: Callable[[int, int, set[int]], bool], set1: Set[int], set2: 
     return True
 
 
-def ccpg_alg(nodes: Set[int], ci_test: Callable[[int, int, set[int]], bool], verbose=False, \
-             i_nodes: list[Set[int]] = [], i_ci_tests: list[Callable[[int, int, set[int]], bool]] = []):
+def ccpg_alg(nodes: Set[int],
+             ci_test: Callable[[int, int, set[int]], bool],
+             verbose=False,
+             i_nodes: list[Set[int]] = [],
+             i_ci_tests: list[Callable[[int, int, set[int]], bool]] = []):
     # Step 1: learn prefix subsets
     p_set: Set[int] = set()
     S: List[Set[int]] = []
     while p_set != nodes:
-        p_set = prefix_set(nodes, ci_test, p_set)
+        p_set = prefix_set(nodes, ci_test, p_set, i_nodes=i_nodes, i_ci_tests=i_ci_tests)
         # enforce termination when ci test are not perfect
         if len(S):
             if p_set == S[-1] and p_set != nodes:
@@ -190,7 +196,6 @@ def i_ccpg(
         **kwargs
 ) -> CausalGraph:
     # Setup ci_test:
-    # ci = CIT(data, ci_test_name, **kwargs)
     ci = MemoizedCIT(data, ci_test_name, alpha_or_penalty, **kwargs)
     
     n_interv = i_data.shape[0]
@@ -198,10 +203,7 @@ def i_ccpg(
         raise ValueError(f"Mismatch in length of i_idata ({n_interv}) and i_nodes ({len(i_nodes)})")
     i_cis = []
     for i in range(n_interv):
-        i_cis.append(MemoizedCIT(np.squeeze(i_data[i,:,:], axis=0), ci_test_name, **kwargs).is_ci)
-
-    # def ci_test(i: int, j: int, cond: Set[int]) -> bool:
-    #     return ci(i, j, list(cond)) > alpha
+        i_cis.append(MemoizedCIT(np.squeeze(i_data[i,:,:], axis=0), ci_test_name, alpha_or_penalty, **kwargs).is_ci)
 
     # Discover CCPG nodes and edges
     n, d = data.shape

@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import networkx as nx
+from causallearn.graph import GeneralGraph, GraphClass
 
 def plot_graph(graph,
                filename,
@@ -9,8 +10,14 @@ def plot_graph(graph,
                arrow_size=20,
                rad: float = 0.0):
     graphNx = nx.DiGraph()
-    nodes = list(graph.G.get_nodes())
-    edges = graph.G.get_graph_edges()
+
+    if isinstance(graph, GraphClass.CausalGraph):
+        nodes = list(graph.G.get_nodes())
+        edges = graph.G.get_graph_edges()
+    else: # assume graph is an instance of GeneralGraph
+        nodes = list(graph.get_nodes())
+        edges = graph.get_graph_edges()
+
     # convert each Edge to (u,v)
     edge_tuples = [(e.get_node1(), e.get_node2()) for e in edges]
     graphNx.add_nodes_from(nodes)
