@@ -15,7 +15,8 @@ def plot_graph(graph,
     graphNx.add_nodes_from(nodes)
     graphNx.add_edges_from(edge_tuples)
 
-    pos = nx.spring_layout(graphNx, k=1.0, iterations=50)
+    # pos = nx.spring_layout(graphNx, k=1.0, iterations=50)
+    pos = nx.circular_layout(graphNx)
 
     plt.figure(figsize=figsize)
     nx.draw_networkx_nodes(graphNx, pos,
