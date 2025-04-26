@@ -1,7 +1,6 @@
 from causallearn.search.ConstraintBased import PC, CCPG
 from pytorch_lightning import seed_everything
 import numpy as np
-import utils
 from CCPG import ccpg as ccpg_original
 from causaldag import (partial_correlation_suffstat,
                        partial_correlation_test,
@@ -12,6 +11,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'code')))
 
 # import ccpg as CCPG
+import utils
 
 # use the same seed as the CCPG authors
 seed_everything(42)
