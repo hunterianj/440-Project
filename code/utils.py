@@ -85,7 +85,7 @@ def plot_graph(graph,
         nx.draw_networkx_edges(graphNx, pos,
                                edgelist=bidirected,
                                arrows=True,
-                               arrowstyle='<->',
+                               arrowstyle='<|-|>',
                                arrowsize=arrow_size,
                                width=1.5,
                                edge_color='k',
@@ -138,6 +138,23 @@ def ccpg_full_graph_connected_bidirected(components, edges, node_names=None):
             edge = Edge(cg.G.nodes[u], cg.G.nodes[v],
                         Endpoint.ARROW, Endpoint.ARROW)
             cg.G.add_edge(edge)
+
+    # directed edges between components
+    for i, j in edges:
+        for u in components[i]:
+            for v in components[j]:
+                cg.G.add_directed_edge(cg.G.nodes[u], cg.G.nodes[v])
+
+    return cg
+
+def ccpg_full_graph_not_connected(components, edges, node_names=None):
+    all_nodes = set().union(*components)
+    d = len(all_nodes)
+
+    # build empty graph on d nodes
+    cg = CausalGraph(d, node_names)
+    for e in list(cg.G.get_graph_edges()):
+        cg.G.remove_edge(e)
 
     # directed edges between components
     for i, j in edges:
