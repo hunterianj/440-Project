@@ -32,10 +32,16 @@ print('Components: ', [{node_names[j] for j in i} for i in c])
 print('Edges: ', e)
 
 # Our implementation
-graph = CCPG.ccpg(data, alpha=1e-3, node_names=node_names)
+graph, components, edges = CCPG.ccpg(data, alpha=1e-3, node_names=node_names)
+expandedGraphUndirected = utils.ccpg_full_graph_connected_undirected(components, edges, node_names)
+expandedGraphBidirected = utils.ccpg_full_graph_connected_bidirected(components, edges, node_names)
+expandedGraphNotConnected = utils.ccpg_full_graph_not_connected(components, edges, node_names)
 
 # PC
 graph_PC = PC.pc(data, alpha=1e-3, node_names=node_names)
 
 utils.plot_graph(graph, "airfoil_our_ccpg")
+utils.plot_graph(expandedGraphUndirected, "airfoil_our_ccpg_expanded_undirected")
+utils.plot_graph(expandedGraphBidirected, "airfoil_our_ccpg_expanded_bidirected")
+utils.plot_graph(expandedGraphNotConnected, "airfoil_our_ccpg_expanded_not_connected")
 utils.plot_graph(graph_PC, "airfoil_pc")

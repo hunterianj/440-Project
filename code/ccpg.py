@@ -20,7 +20,7 @@ def prefix_set(nodes: Set[int],
                ) -> Set[int]:
     # j
     j_set = set()
-    if len(i_nodes) > 0:
+    if i_nodes:
         for i in range(len(i_nodes)):
             i_min_s = i_nodes[i] - pset
             des_i_min_s_min_i_min_s = set()
