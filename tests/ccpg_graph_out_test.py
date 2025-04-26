@@ -32,10 +32,12 @@ print('Components: ', [{node_names[j] for j in i} for i in c])
 print('Edges: ', e)
 
 # Our implementation
-graph = CCPG.ccpg(data, alpha=1e-3, node_names=node_names)
+graph, components, edges = CCPG.ccpg(data, alpha=1e-3, node_names=node_names)
+expandedGraph = utils.ccpg_full_graph_connected(components, edges, node_names)
 
 # PC
 graph_PC = PC.pc(data, alpha=1e-3, node_names=node_names)
 
 utils.plot_graph(graph, "airfoil_our_ccpg")
+utils.plot_graph(expandedGraph, "airfoil_our_ccpg_expanded")
 utils.plot_graph(graph_PC, "airfoil_pc")
