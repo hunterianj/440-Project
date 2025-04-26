@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 def plot_graph(graph,
+               filename,
                figsize=(8,6),
                node_size=500,
                font_size=12,
@@ -10,7 +11,7 @@ def plot_graph(graph,
     graphNx = nx.DiGraph()
     nodes = list(graph.G.get_nodes())
     edges = graph.G.get_graph_edges()
-    # convert each Edge → (u,v)
+    # convert each Edge to (u,v)
     edge_tuples = [(e.get_node1(), e.get_node2()) for e in edges]
     graphNx.add_nodes_from(nodes)
     graphNx.add_edges_from(edge_tuples)
@@ -39,4 +40,6 @@ def plot_graph(graph,
     plt.margins(0.2, 0.2)
     plt.tight_layout()
     plt.axis('off')
-    plt.show()
+    # plt.show()
+    filename = f"figs/{filename}.png"
+    plt.savefig(filename, bbox_inches="tight", pad_inches=0.1)

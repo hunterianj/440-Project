@@ -1,7 +1,12 @@
 from causallearn.search.ConstraintBased import CCPG
+import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'code')))
+
+# import ccpg as CCPG
 from causallearn.utils.cit import CIT
 import h5py
-import os
 from pytorch_lightning import seed_everything
 from CCPG.data import synthetic_instance  # vendor from authors
 from time import time
