@@ -12,11 +12,35 @@ from causallearn.graph.GraphClass import CausalGraph
 from causallearn.utils.cit import *
 
 
-def prefix_set(nodes: Set[int], ci_test: Callable[[int, int, set[int]], bool], pset: Set[int], verbose: bool = False) -> \
+def prefix_set(nodes: Set[int], ci_test: Callable[[int, int, set[int]], bool], pset: Set[int], verbose: bool = False, \
+               i_nodes: list[Set[int]] = [], i_ci_tests: list[Callable[[int, int, set[int]], bool]] = []) -> \
         Set[int]:
+    # j
+    j_set = set()
+    if i_nodes:
+        for i in range(len(i_nodes)):
+            i_min_s = i_nodes[i] - pset
+            des_i_min_s_min_i_min_s = set()
+            for u in nodes - i_nodes[i]:
+                for v in i_min_s:
+                    if not i_ci_tests[i](u, v, set()):
+                        if verbose: print(f"Removing {u} from the prefix set")
+                        des_i_min_s_min_i_min_s.add(u)
+                        break
+            j_set.union(des_i_min_s_min_i_min_s)
+            des_i_min_s_incl = des_i_min_s_min_i_min_s.union(i_min_s)
+            for v in i_min_s:
+                h_s_i_v = set()
+                for u in nodes - pset.union(des_i_min_s_incl):
+                    if not ci_test(u, v, nodes - des_i_min_s_incl):
+                        h_s_i_v.add(u)
+                if h_s_i_v.intersection(nodes - pset):
+                    if verbose: print(f"Removing {v} from the prefix set")
+                    j_set.add(v)
+                    
     # d
     d_set = set()
-    for w in nodes - pset:
+    for w in nodes - pset - j_set:
         w_is_indept = False
         for u in nodes:
             if w_is_indept:
@@ -30,7 +54,7 @@ def prefix_set(nodes: Set[int], ci_test: Callable[[int, int, set[int]], bool], p
 
     # e
     e_set = set()
-    for w in nodes - pset - d_set:
+    for w in nodes - pset - j_set - d_set:
         w_is_indept = False
         for u in pset - {w}:
             if w_is_indept:
@@ -45,7 +69,7 @@ def prefix_set(nodes: Set[int], ci_test: Callable[[int, int, set[int]], bool], p
 
     # f
     f_set = set()
-    for w in nodes - pset - d_set - e_set:
+    for w in nodes - pset - j_set - d_set - e_set:
         w_is_indept = False
         for u in pset - {w}:
             if w_is_indept:
@@ -56,8 +80,8 @@ def prefix_set(nodes: Set[int], ci_test: Callable[[int, int, set[int]], bool], p
                     f_set.add(w)
                     w_is_indept = True
                     break
-
-    return nodes - d_set - e_set - f_set
+                    
+    return nodes - j_set - d_set - e_set - f_set
 
 
 def set_ci(ci_test: Callable[[int, int, set[int]], bool], set1: Set[int], set2: Set[int], cond_set: Set[int]):
@@ -68,7 +92,8 @@ def set_ci(ci_test: Callable[[int, int, set[int]], bool], set1: Set[int], set2: 
     return True
 
 
-def ccpg_alg(nodes: Set[int], ci_test: Callable[[int, int, set[int]], bool], verbose=False):
+def ccpg_alg(nodes: Set[int], ci_test: Callable[[int, int, set[int]], bool], verbose=False, \
+             i_nodes: list[Set[int]] = [], i_ci_tests: list[Callable[[int, int, set[int]], bool]] = []):
     # Step 1: learn prefix subsets
     p_set: Set[int] = set()
     S: List[Set[int]] = []
@@ -105,7 +130,7 @@ def ccpg_alg(nodes: Set[int], ci_test: Callable[[int, int, set[int]], bool], ver
         cond_set = set().union(*components[:i - 1]) if i > 0 else set()
         if not set_ci(ci_test, components[i], components[j], cond_set):
             edges.add((i, j))
-
+    
     return components, edges
 
 
@@ -127,6 +152,62 @@ def ccpg(
     # Discover CCPG nodes and edges
     n, d = data.shape
     components, edges = ccpg_alg(set(range(d)), ci.is_ci, verbose)
+
+    # print(f"Components: {components}")
+    # print(f"Edges: {edges}")
+
+    # build graph from edges
+    k = len(components)
+    # make names like "{x,y}"
+    names: List[str]
+    if node_names is None:
+        # use integer names
+        names = ["{" + ",".join(map(str, comp)) + "}" for comp in components]
+    else:
+        if len(node_names) != d:
+            raise ValueError(f"Expected node_names of length {d}, got {len(node_names)}")
+        names = [
+            "{" + ",".join(node_names[i] for i in sorted(comp)) + "}" for comp in components
+        ]
+
+    cg = CausalGraph(k, node_names=names) # should probably use the DAG graph class instead of CausalGraph
+    cg.G.remove_edges(cg.G.get_graph_edges())
+    # add edges between components
+    for (i, j) in edges:
+        cg.G.add_directed_edge(cg.G.nodes[i], cg.G.nodes[j])
+
+    return cg
+
+
+def i_ccpg(
+        data: ndarray,
+        i_data: ndarray,
+        i_nodes: list[Set[int]],
+        alpha_or_penalty: float = None,
+        ci_test_name: str = "fisherz",
+        verbose: bool = False,
+        node_names: List[str] = None,
+        **kwargs
+) -> CausalGraph:
+    # Setup ci_test:
+    # ci = CIT(data, ci_test_name, **kwargs)
+    ci = MemoizedCIT(data, ci_test_name, alpha_or_penalty, **kwargs)
+    
+    n_interv = i_data.shape[0]
+    if len(i_nodes) != n_interv:
+        raise ValueError(f"Mismatch in length of i_idata ({n_interv}) and i_nodes ({len(i_nodes)})")
+    i_cis = []
+    for i in range(n_interv):
+        i_cis.append(MemoizedCIT(np.squeeze(i_data[i,:,:], axis=0), ci_test_name, **kwargs).is_ci)
+
+    # def ci_test(i: int, j: int, cond: Set[int]) -> bool:
+    #     return ci(i, j, list(cond)) > alpha
+
+    # Discover CCPG nodes and edges
+    n, d = data.shape
+    if i_data.shape[-1] != d:
+        raise ValueError(f"Mismatch in dimn of data {d} and i_idata {i_data.shape[-1]}")
+    components, edges = ccpg_alg(set(range(d)), ci.is_ci, verbose, i_nodes, i_cis)
 
     # print(f"Components: {components}")
     # print(f"Edges: {edges}")
