@@ -48,6 +48,7 @@ def plot_graph(graph,
     # pos = nx.spring_layout(graphNx, k=1.0, iterations=50)
     pos = nx.circular_layout(graphNx)
 
+    # draw nodes
     plt.figure(figsize=figsize)
     nx.draw_networkx_nodes(graphNx, pos,
                            node_size=node_size,
@@ -90,17 +91,6 @@ def plot_graph(graph,
                                edge_color='k',
                                connectionstyle=f'arc3,rad={rad}')
 
-
-
-
-    # nx.draw_networkx_edges(graphNx, pos,
-    #                        arrows=True,
-    #                        arrowstyle='-|>',
-    #                        arrowsize=arrow_size,
-    #                        width=1.5,
-    #                        edge_color='k',
-    #                        connectionstyle=f'arc3,rad={rad}')
-
     plt.margins(0.2, 0.2)
     plt.tight_layout()
     plt.axis('off')
@@ -108,7 +98,7 @@ def plot_graph(graph,
     filename = f"figs/{filename}.png"
     plt.savefig(filename, bbox_inches="tight", pad_inches=0.1)
 
-def ccpg_full_graph_connected(components, edges, node_names=None):
+def ccpg_full_graph_connected_undirected(components, edges, node_names=None):
     all_nodes = set().union(*components)
     d = len(all_nodes)
 
@@ -123,6 +113,30 @@ def ccpg_full_graph_connected(components, edges, node_names=None):
             edge = Edge(cg.G.nodes[u], cg.G.nodes[v],
                         Endpoint.TAIL, Endpoint.TAIL)
             # breakpoint()
+            cg.G.add_edge(edge)
+
+    # directed edges between components
+    for i, j in edges:
+        for u in components[i]:
+            for v in components[j]:
+                cg.G.add_directed_edge(cg.G.nodes[u], cg.G.nodes[v])
+
+    return cg
+
+def ccpg_full_graph_connected_bidirected(components, edges, node_names=None):
+    all_nodes = set().union(*components)
+    d = len(all_nodes)
+
+    # build empty graph on d nodes
+    cg = CausalGraph(d, node_names)
+    for e in list(cg.G.get_graph_edges()):
+        cg.G.remove_edge(e)
+
+    # undirected edges within each component
+    for comp in components:
+        for u, v in combinations(sorted(comp), 2):
+            edge = Edge(cg.G.nodes[u], cg.G.nodes[v],
+                        Endpoint.ARROW, Endpoint.ARROW)
             cg.G.add_edge(edge)
 
     # directed edges between components
