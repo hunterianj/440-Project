@@ -1,11 +1,17 @@
-from causallearn.search.ConstraintBased import CCPG, PC
+from causallearn.search.ConstraintBased import PC
 from pytorch_lightning import seed_everything
 import numpy as np
-import utils
 from CCPG import ccpg as ccpg_original
 from causaldag import (partial_correlation_suffstat,
                        partial_correlation_test,
                        MemoizedCI_Tester)
+import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'code')))
+
+import ccpg as CCPG
+import utils
 
 # use the same seed as the CCPG authors
 seed_everything(42)
@@ -31,5 +37,5 @@ graph = CCPG.ccpg(data, alpha=1e-3, node_names=node_names)
 # PC
 graph_PC = PC.pc(data, alpha=1e-3, node_names=node_names)
 
-utils.plot_graph(graph)
-utils.plot_graph(graph_PC)
+utils.plot_graph(graph, "airfoil_our_ccpg")
+utils.plot_graph(graph_PC, "airfoil_pc")
