@@ -146,8 +146,7 @@ def ccpg(
         ci_test_name: str = "fisherz",
         verbose: bool = False,
         node_names: List[str] = None,
-        **kwargs
-) -> CausalGraph:
+        **kwargs):
     # Setup ci_test:
     # ci = CIT(data, ci_test_name, **kwargs)
     ci = MemoizedCIT(data, ci_test_name, alpha_or_penalty, **kwargs)
@@ -182,7 +181,7 @@ def ccpg(
     for (i, j) in edges:
         cg.G.add_directed_edge(cg.G.nodes[i], cg.G.nodes[j])
 
-    return cg
+    return cg, components, edges
 
 
 def i_ccpg(
@@ -193,8 +192,7 @@ def i_ccpg(
         ci_test_name: str = "fisherz",
         verbose: bool = False,
         node_names: List[str] = None,
-        **kwargs
-) -> CausalGraph:
+        **kwargs):
     # Setup ci_test:
     ci = MemoizedCIT(data, ci_test_name, alpha_or_penalty, **kwargs)
     
@@ -234,7 +232,7 @@ def i_ccpg(
     for (i, j) in edges:
         cg.G.add_directed_edge(cg.G.nodes[i], cg.G.nodes[j])
 
-    return cg
+    return cg, components, edges
 
 
 # A memoized version of CIT to match the memoizing nature of the Author's CCPG CI_Tester
