@@ -1,4 +1,4 @@
-from causallearn.search.ConstraintBased import PC, CCPG
+from causallearn.search.ConstraintBased import PC
 from pytorch_lightning import seed_everything
 import numpy as np
 from CCPG import ccpg as ccpg_original
@@ -10,7 +10,7 @@ import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'code')))
 
-# import ccpg as CCPG
+import ccpg as CCPG
 import utils
 
 # use the same seed as the CCPG authors
