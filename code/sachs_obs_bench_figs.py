@@ -17,7 +17,7 @@ node_names = list(log_obs_df.columns)
 
 # Setup the figure
 n_graphs = len(results) + 1
-n_cols = 5
+n_cols = 4
 n_rows = (n_graphs + n_cols - 1) // n_cols
 fig, axs = plt.subplots(n_rows, n_cols, figsize=(n_cols*4, n_rows*4))
 
@@ -42,7 +42,7 @@ axs[0].set_title(f"({labels[0]}) Ground Truth")
 axs[0].add_patch(
     patches.FancyBboxPatch(
         (0, 0), 1, 1,
-        boxstyle="round,pad=0.02,rounding_size=0.05",
+        boxstyle="round,pad=0.02,rounding_size=0.25",
         transform=axs[0].transAxes,
         facecolor="#f0f0f0",
         edgecolor="none",
@@ -61,6 +61,16 @@ for i, res in enumerate(results):
     label = f"({labels[i+1]}) {res['data_label']}-{res['ci_test_name']}"
     axs[i+1].set_title(label)
     axs[i+1].set_facecolor("#f0f0f0")
+    axs[i+1].add_patch(
+        patches.FancyBboxPatch(
+            (0, 0), 1, 1,
+            boxstyle="round,pad=0.02,rounding_size=0.25",
+            transform=axs[i+1].transAxes,
+            facecolor="#f0f0f0",
+            edgecolor="none",
+            zorder=-1
+        )
+    )
     axs[i+1].axis('off')
 
 # Remove any empty subplots
