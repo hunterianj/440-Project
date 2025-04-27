@@ -20,7 +20,7 @@ def prefix_set(nodes: Set[int],
                ) -> Set[int]:
     # j
     j_set = set()
-    if i_nodes:
+    if len(i_nodes)>0:
         for i in range(len(i_nodes)):
             i_min_s = i_nodes[i] - pset
             des_i_min_s_min_i_min_s = set()
@@ -30,14 +30,15 @@ def prefix_set(nodes: Set[int],
                         if verbose: print(f"Removing {u} from the prefix set")
                         des_i_min_s_min_i_min_s.add(u)
                         break
-            j_set.union(des_i_min_s_min_i_min_s)
+            j_set = j_set.union(des_i_min_s_min_i_min_s)
             des_i_min_s_incl = des_i_min_s_min_i_min_s.union(i_min_s)
             for v in i_min_s:
                 h_s_i_v = set()
                 for u in nodes - pset.union(des_i_min_s_incl):
+                    if u in nodes - des_i_min_s_incl: continue
                     if not ci_test(u, v, nodes - des_i_min_s_incl):
                         h_s_i_v.add(u)
-                if h_s_i_v.intersection(nodes - pset):
+                if len(h_s_i_v.intersection(nodes - pset))>0:
                     if verbose: print(f"Removing {v} from the prefix set")
                     j_set.add(v)
                     
@@ -104,7 +105,7 @@ def ccpg_alg(nodes: Set[int],
     p_set: Set[int] = set()
     S: List[Set[int]] = []
     while p_set != nodes:
-        p_set = prefix_set(nodes, ci_test, p_set, i_nodes=i_nodes, i_ci_tests=i_ci_tests)
+        p_set = prefix_set(nodes, ci_test, p_set, verbose=verbose, i_nodes=i_nodes, i_ci_tests=i_ci_tests)
         # enforce termination when ci test are not perfect
         if len(S):
             if p_set == S[-1] and p_set != nodes:
@@ -125,9 +126,9 @@ def ccpg_alg(nodes: Set[int],
         ug = nx.Graph()
         ug.add_nodes_from(s_i - cond_set)
         ug.add_edges_from(edges)
-        cc = connected_components(ug)
-        if verbose: print(f"Connected components: {list(cc)}")
-        components.extend([set(c) for c in cc])
+        ccs = [set(cc) for cc in connected_components(ug)]
+        if verbose: print(f"Connected components: {ccs}")
+        components.extend(ccs)
 
     # Step 3: determine outer component edges
     edges = set()
@@ -183,7 +184,7 @@ def ccpg(
 
 def i_ccpg(
         data: ndarray,
-        i_data: ndarray,
+        i_data: list[ndarray],
         i_nodes: list[Set[int]],
         alpha: float = None,
         penalty_discount: float = None,
@@ -194,17 +195,14 @@ def i_ccpg(
     # Setup ci_test:
     ci = MemoizedCIT(data, ci_test_name, alpha=alpha, penalty_discount=penalty_discount, **kwargs)
     
-    n_interv = i_data.shape[0]
-    if len(i_nodes) != n_interv:
-        raise ValueError(f"Mismatch in length of i_idata ({n_interv}) and i_nodes ({len(i_nodes)})")
-    i_cis = []
-    for i in range(n_interv):
-        i_cis.append(MemoizedCIT(np.squeeze(i_data[i,:,:], axis=0), ci_test_name, alpha, **kwargs).is_ci)
-
+    if len(i_nodes) != len(i_data):
+        raise ValueError(f"Mismatch in # of interventions: i_idata ({len(i_data)}) and i_nodes ({len(i_nodes)})")
+    i_cis = [MemoizedCIT(i_d, ci_test_name, alpha=alpha, penalty_discount=penalty_discount, **kwargs).is_ci for i_d in i_data]
+        
     # Discover CCPG nodes and edges
     n, d = data.shape
-    if i_data.shape[-1] != d:
-        raise ValueError(f"Mismatch in dimn of data {d} and i_idata {i_data.shape[-1]}")
+    if i_data[0].shape[-1] != d:
+        raise ValueError(f"Mismatch in # of nodes: data {d} and i_idata {i_data[0].shape[-1]}")
     components, edges = ccpg_alg(set(range(d)), ci.is_ci, verbose, i_nodes, i_cis)
 
     # print(f"Components: {components}")

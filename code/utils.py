@@ -100,7 +100,7 @@ def plot_graph(graph,
     plt.tight_layout()
     plt.axis('off')
     # plt.show()
-    filename = f"figs/{filename}.png"
+    filename = f"../figs/{filename}.png"
     plt.savefig(filename, bbox_inches="tight", pad_inches=0.1)
 
 def plot_graph_2(graph,
