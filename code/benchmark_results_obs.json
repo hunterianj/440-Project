@@ -1,0 +1,535 @@
+[
+  {
+    "data_label": "continuous",
+    "ci_test_name": "fisherz",
+    "param_name": "alpha",
+    "param_value": 0.001,
+    "shd": 20,
+    "result_details": {
+      "shd": 20,
+      "s_metric": 0.06320371614710632,
+      "c_metric": 0.04723814682306378,
+      "sc_metric": 0.4362554112554113,
+      "runtime_sec": 0.018067121505737305,
+      "graph": null,
+      "components": [
+        [
+          2,
+          3,
+          4
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          8,
+          9,
+          10
+        ],
+        [
+          0,
+          1,
+          6
+        ]
+      ],
+      "edges": [
+        [
+          1,
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "log-continuous",
+    "ci_test_name": "fisherz",
+    "param_name": "alpha",
+    "param_value": 0.001,
+    "shd": 20,
+    "result_details": {
+      "shd": 20,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.4976406926406927,
+      "runtime_sec": 0.022950172424316406,
+      "graph": null,
+      "components": [
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          8,
+          9,
+          10
+        ],
+        [
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "edges": [
+        [
+          2,
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "discrete",
+    "ci_test_name": "fisherz",
+    "param_name": "alpha",
+    "param_value": 0.0001,
+    "shd": 20,
+    "result_details": {
+      "shd": 20,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.50491341991342,
+      "runtime_sec": 0.019691944122314453,
+      "graph": null,
+      "components": [
+        [
+          1
+        ],
+        [
+          2,
+          3,
+          4
+        ],
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          9
+        ],
+        [
+          10
+        ],
+        [
+          0
+        ],
+        [
+          8
+        ]
+      ],
+      "edges": [
+        [
+          4,
+          6
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          3,
+          6
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "continuous",
+    "ci_test_name": "kci",
+    "param_name": "alpha",
+    "param_value": 0.001,
+    "shd": 21,
+    "result_details": {
+      "shd": 21,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.4976406926406927,
+      "runtime_sec": 244.50580382347107,
+      "graph": null,
+      "components": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          4
+        ],
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          8,
+          9,
+          10
+        ]
+      ],
+      "edges": []
+    }
+  },
+  {
+    "data_label": "continuous",
+    "ci_test_name": "rcit",
+    "param_name": "alpha",
+    "param_value": 0.0001,
+    "shd": 19,
+    "result_details": {
+      "shd": 19,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.4976406926406927,
+      "runtime_sec": 35.568644762039185,
+      "graph": null,
+      "components": [
+        [
+          8,
+          9
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          4
+        ],
+        [
+          5
+        ],
+        [
+          10
+        ]
+      ],
+      "edges": [
+        [
+          1,
+          4
+        ],
+        [
+          0,
+          5
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "continuous",
+    "ci_test_name": "gaussbic",
+    "param_name": "threshold",
+    "param_value": 0.0,
+    "shd": 22,
+    "result_details": {
+      "shd": 22,
+      "s_metric": 0.06320371614710632,
+      "c_metric": 0.04723814682306378,
+      "sc_metric": 0.4362554112554113,
+      "runtime_sec": 0.12369108200073242,
+      "graph": null,
+      "components": [
+        [
+          2,
+          3,
+          4
+        ],
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          8,
+          9,
+          10
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "edges": [
+        [
+          1,
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "log-continuous",
+    "ci_test_name": "gaussbic",
+    "param_name": "threshold",
+    "param_value": 0.0,
+    "shd": 30,
+    "result_details": {
+      "shd": 30,
+      "s_metric": 0.44988894415913433,
+      "c_metric": 0.18003566560407422,
+      "sc_metric": 0.3810606060606061,
+      "runtime_sec": 0.12273979187011719,
+      "graph": null,
+      "components": [
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          8,
+          9,
+          10
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          4
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "discrete",
+    "ci_test_name": "chisq",
+    "param_name": "alpha",
+    "param_value": 0.001,
+    "shd": 20,
+    "result_details": {
+      "shd": 20,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.50491341991342,
+      "runtime_sec": 0.06332516670227051,
+      "graph": null,
+      "components": [
+        [
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          0
+        ],
+        [
+          9
+        ],
+        [
+          10
+        ],
+        [
+          4
+        ],
+        [
+          8
+        ]
+      ],
+      "edges": [
+        [
+          1,
+          6
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          4,
+          7
+        ],
+        [
+          5,
+          7
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "discrete",
+    "ci_test_name": "gsq",
+    "param_name": "alpha",
+    "param_value": 0.0001,
+    "shd": 20,
+    "result_details": {
+      "shd": 20,
+      "s_metric": 0.0,
+      "c_metric": 0.0,
+      "sc_metric": 0.5182467532467532,
+      "runtime_sec": 0.04095602035522461,
+      "graph": null,
+      "components": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          4
+        ],
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          9
+        ],
+        [
+          8,
+          10
+        ]
+      ],
+      "edges": []
+    }
+  },
+  {
+    "data_label": "continuous",
+    "ci_test_name": "kci",
+    "param_name": "alpha",
+    "param_value": 0.001,
+    "shd": 21,
+    "result_details": {
+      "shd": 21,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.4976406926406927,
+      "runtime_sec": 97.09492111206055,
+      "graph": null,
+      "components": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          4
+        ],
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          8,
+          9,
+          10
+        ]
+      ],
+      "edges": []
+    }
+  },
+  {
+    "data_label": "log-continuous",
+    "ci_test_name": "kci",
+    "param_name": "alpha",
+    "param_value": 0.0001,
+    "shd": 25,
+    "result_details": {
+      "shd": 25,
+      "s_metric": 0.604356461585652,
+      "c_metric": 0.2584259971204726,
+      "sc_metric": 0.2803246753246753,
+      "runtime_sec": 2617.499435901642,
+      "graph": null,
+      "components": [
+        [
+          8,
+          10,
+          5,
+          7
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          6
+        ],
+        [
+          0
+        ],
+        [
+          4
+        ],
+        [
+          9
+        ],
+        [
+          3
+        ]
+      ],
+      "edges": [
+        [
+          2,
+          7
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          2,
+          5
+        ]
+      ]
+    }
+  }
+]

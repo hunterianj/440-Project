@@ -69,6 +69,17 @@ def loadSachsObservational():
     filtered_data_log = filtered_data_log.drop(columns=intervention_cols)
     return filtered_data_log, filtered_data_continuous
 
+def loadSachsObservationalSmall():
+    intervention_cols = ['cd3_cd28', 'icam2', 'aktinhib', 'g0076', 'psitect', 'u0126', 'ly', 'pma', 'b2camp']
+    dataset_log = pd.read_csv("../data/sachs/data/sachs.2005.continuous.discrete.experimental.mixed.maximum.2.txt", sep=r'\s+')
+    dataset_continuous = pd.read_csv("../data/sachs/data/sachs.2005.continuous.txt", sep=r'\s+')
+    # retrieve cd3_cd28 activated Th cells
+    filtered_data_log = dataset_log[(dataset_log['cd3_cd28'] == 1) &
+                                    (dataset_log[[col for col in intervention_cols if col not in ['cd3_cd28']]] == 0).all(axis=1)]
+    filtered_data_continuous = dataset_continuous.loc[filtered_data_log.index]
+    filtered_data_log = filtered_data_log.drop(columns=intervention_cols)
+    return filtered_data_log, filtered_data_continuous
+
 class IHDPFormat(Enum):
     TRAIN = 1
     TEST = 2
