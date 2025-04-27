@@ -11,18 +11,8 @@ sys.path.append("causal-learn")
 from causallearn.graph.Dag import Dag
 from causallearn.graph.GraphNode import GraphNode
 
-# from pytetrad import resources
-
-# class Format(Enum):
-#     RAW = 1
-#     TETRAD = 2
-
 def loadSachsDataset():
-    # dataset = pd.read_csv("../data/sachs/data/sachs.2005.continuous.txt", sep=r'\s+')
     dataset = pd.read_csv("../data/sachs/data/sachs.2005.logxplus10.continuous.txt", sep=r'\s+')
-    # if format == Format.TETRAD:
-    # dataset =
-
     return dataset
 
 def loadSachsDatasetWithExperiments():
@@ -34,10 +24,10 @@ def loadSachsGroundTruth():
     f = open('../data/sachs/ground_truth/sachs.2005.ground.truth.graph.txt')
     content = f.read().splitlines()
     f.close()
-    
+
     # see https://github.com/cmu-phil/example-causal-datasets/blob/main/formatting.txt
     edge_re = re.compile(r"(?<![^\s>])[0-9]+\. ([^\s]*) --> ([^\s]*)")
-    
+
     if content[0] == "Graph Nodes:":
         node_list = [GraphNode(name) for name in content[1].split(";")]
         ground_truth_graph = Dag(node_list)
@@ -57,6 +47,27 @@ def loadSachsGroundTruth():
         return ""
 
     return ground_truth_graph
+
+def loadSachsObservationalDiscrete():
+    df = pd.read_csv("../data/sachs/data/sachs.interventional.txt", sep=r'\s+')
+    data_cols = [col for col in df.columns if col != "INT"]
+    data = df[df["INT"] == 0][data_cols]
+    return data
+
+def loadSachsObservationalContinuous():
+    dataset = pd.read_csv("../data/sachs/data/sachs.2005.logxplus10.continuous.txt", sep=r'\s+')
+    return dataset
+
+def loadSachsObservational():
+    intervention_cols = ['cd3_cd28', 'icam2', 'aktinhib', 'g0076', 'psitect', 'u0126', 'ly', 'pma', 'b2camp']
+    dataset_log = pd.read_csv("../data/sachs/data/sachs.2005.continuous.discrete.experimental.mixed.maximum.2.txt", sep=r'\s+')
+    dataset_continuous = pd.read_csv("../data/sachs/data/sachs.2005.continuous.txt", sep=r'\s+')
+    # retrieve activated Th cells, which include cd3_cd28 and icam2 groups
+    filtered_data_log = dataset_log[((dataset_log['cd3_cd28'] == 1) | (dataset_log['icam2'] == 1)) &
+                                    (dataset_log[[col for col in intervention_cols if col not in ['cd3_cd28', 'icam2']]] == 0).all(axis=1)]
+    filtered_data_continuous = dataset_continuous.loc[filtered_data_log.index]
+    filtered_data_log = filtered_data_log.drop(columns=intervention_cols)
+    return filtered_data_log, filtered_data_continuous
 
 class IHDPFormat(Enum):
     TRAIN = 1

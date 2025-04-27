@@ -41,7 +41,7 @@ class BIC_CIT(CIT_Base):
         if isinstance(score_with_X, np.ndarray):
             score_with_X = score_with_X.item()
 
-        return score_without_X - score_with_X
+        return score_with_X - score_without_X
 
     def is_ci(self, X, Y, condition_set=None):
-        return self.__call__(X, Y, condition_set) >= 0
+        return self.__call__(X, Y, condition_set) > 0
