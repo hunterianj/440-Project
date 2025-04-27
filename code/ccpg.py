@@ -126,9 +126,9 @@ def ccpg_alg(nodes: Set[int],
         ug = nx.Graph()
         ug.add_nodes_from(s_i - cond_set)
         ug.add_edges_from(edges)
-        cc = connected_components(ug)
-        if verbose: print(f"Connected components: {list(cc)}")
-        components.extend([set(c) for c in cc])
+        ccs = [set(cc) for cc in connected_components(ug)]
+        if verbose: print(f"Connected components: {ccs}")
+        components.extend(ccs)
 
     # Step 3: determine outer component edges
     edges = set()
