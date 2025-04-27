@@ -142,17 +142,14 @@ def ccpg_alg(nodes: Set[int],
 
 def ccpg(
         data: ndarray,
-        alpha_or_penalty: float = None,
+        alpha: float = None,
+        penalty_discount = None,
         ci_test_name: str = "fisherz",
         verbose: bool = False,
         node_names: List[str] = None,
         **kwargs):
     # Setup ci_test:
-    # ci = CIT(data, ci_test_name, **kwargs)
-    ci = MemoizedCIT(data, ci_test_name, alpha_or_penalty, **kwargs)
-
-    # def ci_test(i: int, j: int, cond: Set[int]) -> bool:
-    #     return ci(i, j, list(cond)) > alpha
+    ci = MemoizedCIT(data, ci_test_name, alpha=alpha, penalty_discount=penalty_discount, **kwargs)
 
     # Discover CCPG nodes and edges
     n, d = data.shape
@@ -188,17 +185,18 @@ def i_ccpg(
         data: ndarray,
         i_data: list[ndarray],
         i_nodes: list[Set[int]],
-        alpha_or_penalty: float = None,
+        alpha: float = None,
+        penalty_discount: float = None,
         ci_test_name: str = "fisherz",
         verbose: bool = False,
         node_names: List[str] = None,
         **kwargs):
     # Setup ci_test:
-    ci = MemoizedCIT(data, ci_test_name, alpha_or_penalty, **kwargs)
+    ci = MemoizedCIT(data, ci_test_name, alpha=alpha, penalty_discount=penalty_discount, **kwargs)
     
     if len(i_nodes) != len(i_data):
         raise ValueError(f"Mismatch in # of interventions: i_idata ({len(i_data)}) and i_nodes ({len(i_nodes)})")
-    i_cis = [MemoizedCIT(i_d, ci_test_name, alpha_or_penalty, **kwargs).is_ci for i_d in i_data]
+    i_cis = [MemoizedCIT(i_d, ci_test_name, alpha, penalty_discount=penalty_discount, **kwargs).is_ci for i_d in i_data]
         
     # Discover CCPG nodes and edges
     n, d = data.shape
@@ -234,19 +232,26 @@ def i_ccpg(
 
 # A memoized version of CIT to match the memoizing nature of the Author's CCPG CI_Tester
 class MemoizedCIT:
-    def __init__(self, data, ci_test_name, alpha_or_penalty: float = None, **kwargs):
+    def __init__(self, data,
+                 ci_test_name,
+                 alpha: float = None,
+                 penalty_discount: float = None,
+                 **kwargs):
         self.cache: dict[tuple[int, int, tuple[int,...]], float] = {}
 
         if ci_test_name == "gaussbic":
-            self.cit = CIT(data, ci_test_name, penalty_discount=alpha_or_penalty)
-            self.alpha = 0
+            self.cit = CIT(data, ci_test_name, penalty_discount=penalty_discount)
+            if alpha is None:
+                self.alpha = 0
+            else:
+                self.alpha = alpha
             # self.is_ci = self.cit.is_ci
         else:
             self.cit = CIT(data, ci_test_name, **kwargs)
-            if alpha_or_penalty is None:
+            if alpha is None:
                 self.alpha = 0.05
             else:
-                self.alpha = alpha_or_penalty
+                self.alpha = alpha
 
     def pvalue(self, i: int, j: int, cond_set: set[int]) -> float:
         cache_key = (i, j, tuple(sorted(cond_set)))
@@ -255,4 +260,4 @@ class MemoizedCIT:
         return self.cache[cache_key]
 
     def is_ci(self, i: int, j: int, cond_set: set[int]) -> bool:
-        return self.pvalue(i, j, cond_set) >= self.alpha
+        return self.pvalue(i, j, cond_set) > self.alpha
