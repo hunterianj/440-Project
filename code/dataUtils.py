@@ -203,7 +203,3 @@ def loadIHDPDataset(replication: int = 0, format: IHDPFormat = IHDPFormat.TRAIN)
     dataframe["treatment"] = t
     dataframe["outcome"] = yf
     return dataframe
-
-sachs_dat, sachs_i_dat, sachs_i_nodes = loadSachsInterventionalContinuous()
-
-x=1
