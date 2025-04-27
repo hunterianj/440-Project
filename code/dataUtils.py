@@ -64,8 +64,6 @@ def loadSachsDatasetWithExperiments():
 
 
 def loadSachsInterventionalContinuous():
-    df = pd.read_csv("../data/sachs/data/sachs.2005.continuous.interventional.txt", sep=r'\s+')
-    
     # interventions = {
     #     (1, 0, 0, 0, 0, 0, 0, 0, 0): "obs",  # (853 samples) cd3_cd28 only (general pertubation)
     #     (1, 1, 0, 0, 0, 0, 0, 0, 0): "obs",  # (901 samples) cd3_cd28 + icam2 (general pertubation)
@@ -78,9 +76,11 @@ def loadSachsInterventionalContinuous():
     #     (0, 0, 0, 0, 0, 0, 0, 0, 1): "pka"   # (707 samples) b2camp
     # }
     
+    df = pd.read_csv("../data/sachs/data/sachs.2005.continuous.interventional.txt", sep=r'\s+')
+    
     unique_ints = df["INT"].unique()
     # get the list of intervention targets and list of dataframe associated with each intervention
-    intervention_targets = [(df.columns[idx], idx) for idx in unique_ints]
+    # intervention_targets = [(df.columns[idx], idx) for idx in unique_ints]
     data_cols = [col for col in df.columns if col != "INT"]
     data = pd.DataFrame()
     i_data = []
@@ -92,14 +92,14 @@ def loadSachsInterventionalContinuous():
             data = _data
         
     unique_idxs = [i-1 for i in unique_ints]
-    return data, i_data, [(df.columns[i], set([i])) for i in unique_idxs if i >= 0]
+    return data, i_data, [set([i]) for i in unique_idxs if i >= 0]
 
 
 def loadSachsInterventionalDiscrete():
     df = pd.read_csv("../data/sachs/data/sachs.interventional.txt", sep=r'\s+')
     unique_ints = df["INT"].unique()
     # get the list of intervention targets and list of dataframe associated with each intervention
-    intervention_targets = [(df.columns[idx], idx) for idx in unique_ints]
+    # intervention_targets = [(df.columns[idx], idx) for idx in unique_ints]
     data_cols = [col for col in df.columns if col != "INT"]
     data = pd.DataFrame()
     i_data = []
@@ -111,7 +111,7 @@ def loadSachsInterventionalDiscrete():
             data = _data
         
     unique_idxs = [i-1 for i in unique_ints]
-    return data, i_data, [(df.columns[i], set([i])) for i in unique_idxs if i >= 0]
+    return data, i_data, [set([i]) for i in unique_idxs if i >= 0]
 
 
 def loadSachsGroundTruth():

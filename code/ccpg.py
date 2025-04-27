@@ -196,7 +196,7 @@ def i_ccpg(
     
     if len(i_nodes) != len(i_data):
         raise ValueError(f"Mismatch in # of interventions: i_idata ({len(i_data)}) and i_nodes ({len(i_nodes)})")
-    i_cis = [MemoizedCIT(i_d, ci_test_name, alpha, penalty_discount=penalty_discount, **kwargs).is_ci for i_d in i_data]
+    i_cis = [MemoizedCIT(i_d, ci_test_name, alpha=alpha, penalty_discount=penalty_discount, **kwargs).is_ci for i_d in i_data]
         
     # Discover CCPG nodes and edges
     n, d = data.shape
