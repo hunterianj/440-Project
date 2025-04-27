@@ -5,7 +5,7 @@ import utils
 import dataUtils
 
 # Load the benchmark results
-with open('benchmark_results_obs.json', 'r') as f:
+with open('benchmarks/benchmark_results_obs.json', 'r') as f:
     results = json.load(f)
 
 # Load the ground-truth graph
