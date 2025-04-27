@@ -4,6 +4,7 @@ from causallearn.graph.SHD import SHD
 from causallearn.graph.SCM import SCM
 import numpy as np
 
+verbose = False
 sachs_ground_truth = dataUtils.loadSachsGroundTruth()
 utils.plot_graph(sachs_ground_truth, "sachs_ground_truth")
 
@@ -16,44 +17,91 @@ continuous_names = list(log_obs_df.columns)
 log_obs_data = log_obs_df.values
 continuous_obs_data = continuous_log_df.values
 
-# fisherz CI tests on continuous data
+def run_benchmark_suite(data, data_label, node_names, ci_test_name, params, param_name):
+    bestSHD = np.inf
+    bestParam = None
+    bestResult = None
+    print(f"\n--- Benchmarking: {data_label} + {ci_test_name} ---")
+
+    for param in params:
+        result = utils.benchmark_ccpg_against_ground_truth(
+            data=data,
+            ground_truth_graph=sachs_ground_truth,
+            node_names=node_names,
+            ci_test_name=ci_test_name,
+            alpha=param,
+            verbose=verbose
+        )
+        if result["shd"] < bestSHD:
+            bestSHD = result["shd"]
+            bestParam = param
+            bestResult = result
+
+    print(f"Best {param_name} for {data_label} + {ci_test_name}: {bestParam} with SHD = {bestSHD}")
+    print(f"Result: {bestResult}")
+    return bestParam, bestResult
+
+# Parameters for tuning
 alphas = [0.4, 0.3, 0.2, 0.1, 0.05, 0.01, 0.001, 0.0001]
-bestSHD = np.inf
-bestAlpha = 0.4
-bestResult = {}
-for alpha in alphas:
-    result = utils.benchmark_ccpg_against_ground_truth(
-        data=continuous_obs_data,
-        ground_truth_graph=sachs_ground_truth,
-        node_names=continuous_names,
-        ci_test_name="fisherz",
-        alpha=alpha,
-        verbose=True
-    )
-    if result["shd"] < bestSHD:
-        bestSHD = result["shd"]
-        bestAlpha = alpha
-        bestResult = result
 
-print(f"continuous-fisherz: best alpha found = {bestAlpha} with results: {bestResult}")
+# fisherz CI test on continuous data
+run_benchmark_suite(
+    data=continuous_obs_data,
+    data_label="continuous",
+    node_names=continuous_names,
+    ci_test_name="fisherz",
+    params=alphas,
+    param_name="alpha"
+)
 
-# fisherz CI tests on log-continuous data
-alphas = [0.4, 0.3, 0.2, 0.1, 0.05, 0.01, 0.001, 0.0001]
-bestSHD = np.inf
-bestAlpha = 0.4
-bestResult = {}
-for alpha in alphas:
-    result = utils.benchmark_ccpg_against_ground_truth(
-        data=log_obs_data,
-        ground_truth_graph=sachs_ground_truth,
-        node_names=continuous_names,
-        ci_test_name="fisherz",
-        alpha=alpha,
-        verbose=True
-    )
-    if result["shd"] < bestSHD:
-        bestSHD = result["shd"]
-        bestAlpha = alpha
-        bestResult = result
+# fisherz CI test on log-transformed data
+run_benchmark_suite(
+    data=log_obs_data,
+    data_label="log-continuous",
+    node_names=continuous_names,
+    ci_test_name="fisherz",
+    params=alphas,
+    param_name="alpha"
+)
 
-print(f"log-cont-fisherz: best alpha found = {bestAlpha} with results: {bestResult}")
+# # fisherz CI tests on continuous data
+# alphas = [0.4, 0.3, 0.2, 0.1, 0.05, 0.01, 0.001, 0.0001]
+# bestSHD = np.inf
+# bestAlpha = 0.4
+# bestResult = {}
+# for alpha in alphas:
+#     result = utils.benchmark_ccpg_against_ground_truth(
+#         data=continuous_obs_data,
+#         ground_truth_graph=sachs_ground_truth,
+#         node_names=continuous_names,
+#         ci_test_name="fisherz",
+#         alpha=alpha,
+#         verbose=True
+#     )
+#     if result["shd"] < bestSHD:
+#         bestSHD = result["shd"]
+#         bestAlpha = alpha
+#         bestResult = result
+#
+# print(f"continuous-fisherz: best alpha found = {bestAlpha} with results: {bestResult}")
+#
+# # fisherz CI tests on log-continuous data
+# alphas = [0.4, 0.3, 0.2, 0.1, 0.05, 0.01, 0.001, 0.0001]
+# bestSHD = np.inf
+# bestAlpha = 0.4
+# bestResult = {}
+# for alpha in alphas:
+#     result = utils.benchmark_ccpg_against_ground_truth(
+#         data=log_obs_data,
+#         ground_truth_graph=sachs_ground_truth,
+#         node_names=continuous_names,
+#         ci_test_name="fisherz",
+#         alpha=alpha,
+#         verbose=True
+#     )
+#     if result["shd"] < bestSHD:
+#         bestSHD = result["shd"]
+#         bestAlpha = alpha
+#         bestResult = result
+#
+# print(f"log-cont-fisherz: best alpha found = {bestAlpha} with results: {bestResult}")
