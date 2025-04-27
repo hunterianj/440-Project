@@ -8,7 +8,7 @@ from causallearn.utils.GraphUtils import GraphUtils
 import time
 from causallearn.graph.SHD import SHD
 from causallearn.graph.SCM import SCM
-from ccpg import ccpg
+from ccpg import ccpg, i_ccpg
 from causallearn.search.ConstraintBased.PC import pc
 
 def plot_graph(graph,
@@ -370,6 +370,65 @@ def ccpg_full_graph_not_connected(components, edges, node_names=None):
                 cg.G.add_directed_edge(cg.G.nodes[u], cg.G.nodes[v])
 
     return cg
+
+def benchmark_i_ccpg_against_ground_truth(
+        data,
+        i_data,
+        i_nodes,
+        ground_truth_graph,
+        node_names = None,
+        ci_test_name = "fisherz",
+        ci_test_kwargs = None,
+        alpha = None,
+        penalty_discount = None,
+        full_graph_fn = ccpg_full_graph_connected_bidirected,
+        verbose = False,
+        compute_scm = True
+):
+    result = {}
+    # Run CCPG
+    start_time = time.time()
+    graph, components, edges = i_ccpg(
+        data,
+        i_data,
+        i_nodes,
+        alpha=alpha,
+        penalty_discount=penalty_discount,
+        ci_test_name=ci_test_name,
+        node_names=node_names,
+        **(ci_test_kwargs or {}),
+    )
+    elapsed_time = time.time() - start_time
+
+    # Convert the CCPG component graph into a graph with all nodes
+    full_graph = full_graph_fn(components, edges, node_names=node_names)
+
+    # Compute metrics (structural hamming distance and s/c-metrics)
+    shd = SHD(ground_truth_graph, full_graph.G)
+    result["shd"] = shd.get_shd()
+
+    if compute_scm:
+        scm = SCM(ground_truth_graph, full_graph.G)
+        result["s_metric"] = scm.get_s_metric()
+        result["c_metric"] = scm.get_c_metric()
+        result["sc_metric"] = scm.get_sc_metric()
+
+    result["runtime_sec"] = elapsed_time
+    result["graph"] = graph
+    result["components"] = components
+    result["edges"] = edges
+
+    if verbose:
+        print(f"Benchmark Results:")
+        print(f"SHD: {result['shd']}")
+        if compute_scm:
+            print(f"S-metric: {result['s_metric']:.4f}")
+            print(f"C-metric: {result['c_metric']:.4f}")
+            print(f"SC-metric: {result['sc_metric']:.4f}")
+        print(f"Runtime: {result['runtime_sec']:.2f} seconds")
+
+    return result
+
 
 def benchmark_ccpg_against_ground_truth(
         data,

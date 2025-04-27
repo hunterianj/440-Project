@@ -78,14 +78,16 @@ def loadSachsInterventionalContinuous():
     
     df = pd.read_csv("../data/sachs/data/sachs.2005.continuous.interventional.txt", sep=r'\s+')
     
-    unique_ints = df["INT"].unique()
+    df.columns = map(str.lower, df.columns)
+    
+    unique_ints = df["int"].unique()
     # get the list of intervention targets and list of dataframe associated with each intervention
     # intervention_targets = [(df.columns[idx], idx) for idx in unique_ints]
-    data_cols = [col for col in df.columns if col != "INT"]
+    data_cols = [col for col in df.columns if col != "int"]
     data = pd.DataFrame()
     i_data = []
     for interv_idx in unique_ints:
-        _data = df[df["INT"] == interv_idx][data_cols]
+        _data = df[df["int"] == interv_idx][data_cols]
         if interv_idx != 0:
             i_data.append(_data)
         else:
@@ -97,14 +99,17 @@ def loadSachsInterventionalContinuous():
 
 def loadSachsInterventionalDiscrete():
     df = pd.read_csv("../data/sachs/data/sachs.interventional.txt", sep=r'\s+')
-    unique_ints = df["INT"].unique()
+    
+    df.columns = map(str.lower, df.columns)
+    
+    unique_ints = df["int"].unique()
     # get the list of intervention targets and list of dataframe associated with each intervention
     # intervention_targets = [(df.columns[idx], idx) for idx in unique_ints]
-    data_cols = [col for col in df.columns if col != "INT"]
+    data_cols = [col for col in df.columns if col != "int"]
     data = pd.DataFrame()
     i_data = []
     for interv_idx in unique_ints:
-        _data = df[df["INT"] == interv_idx][data_cols]
+        _data = df[df["int"] == interv_idx][data_cols]
         if interv_idx != 0:
             i_data.append(_data)
         else:
