@@ -164,6 +164,17 @@ def loadSachsObservational():
     filtered_data_log = filtered_data_log.drop(columns=intervention_cols)
     return filtered_data_log, filtered_data_continuous
 
+def loadSachsObservationalSmall():
+    intervention_cols = ['cd3_cd28', 'icam2', 'aktinhib', 'g0076', 'psitect', 'u0126', 'ly', 'pma', 'b2camp']
+    dataset_log = pd.read_csv("../data/sachs/data/sachs.2005.continuous.discrete.experimental.mixed.maximum.2.txt", sep=r'\s+')
+    dataset_continuous = pd.read_csv("../data/sachs/data/sachs.2005.continuous.txt", sep=r'\s+')
+    # retrieve cd3_cd28 activated Th cells
+    filtered_data_log = dataset_log[(dataset_log['cd3_cd28'] == 1) &
+                                    (dataset_log[[col for col in intervention_cols if col not in ['cd3_cd28']]] == 0).all(axis=1)]
+    filtered_data_continuous = dataset_continuous.loc[filtered_data_log.index]
+    filtered_data_log = filtered_data_log.drop(columns=intervention_cols)
+    return filtered_data_log, filtered_data_continuous
+
 class IHDPFormat(Enum):
     TRAIN = 1
     TEST = 2
@@ -202,4 +213,44 @@ def loadIHDPDataset(replication: int = 0, format: IHDPFormat = IHDPFormat.TRAIN)
     dataframe = pd.DataFrame(x, columns=[f"x{i}" for i in range(x.shape[1])])
     dataframe["treatment"] = t
     dataframe["outcome"] = yf
+    return dataframe
+
+
+sachs_ground = loadSachsGroundTruth()
+
+def tegGroundTruth():
+    # Load the adjacency matrix
+    adj_matrix = np.loadtxt('../data/TEGroundTruth.txt', delimiter='\t')
+    # print(f"teg GT shape: {adj_matrix.shape}")
+
+    # nodes 27 and 31 are missing in the data. remove them
+    keep = [i for i in range(33) if i not in [26, 30]]
+    adj_matrix = adj_matrix[np.ix_(keep, keep)]
+
+    # Create nodes
+    n_nodes = adj_matrix.shape[0]
+    node_names = [("X%d" % (i + 1)) for i in range(n_nodes)]
+    node_list = [GraphNode(name) for name in node_names]
+    ground_truth_graph = Dag(node_list)
+
+    # Create edges
+    for i in range(n_nodes):
+        for j in range(n_nodes):
+            if adj_matrix[i, j] == 1:
+                node_from = ground_truth_graph.get_node(f"X{i+1}")
+                node_to = ground_truth_graph.get_node(f"X{j+1}")
+                ground_truth_graph.add_directed_edge(node_from, node_to)
+
+    # missing_nodes = ["X27", "X31"]
+    # for node in missing_nodes:
+    #     n = ground_truth_graph.get_node(node)
+    #     if n is not None:
+    #         ground_truth_graph.remove_node(n)
+
+    return ground_truth_graph
+
+def loadTEGData():
+    data = np.loadtxt('../data/datasetTENumpy.txt', delimiter=",")
+    # print(f"teg data shape: {data.shape}")
+    return data
     return dataframe
