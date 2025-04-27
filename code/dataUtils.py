@@ -91,7 +91,7 @@ def loadSachsInterventionalContinuous():
         else:
             data = _data
         
-    unique_idxs = [i-1 for i in unique_ints]
+    unique_idxs = [i-1 for i in unique_ints.tolist()]
     return data, i_data, [set([i]) for i in unique_idxs if i >= 0]
 
 
@@ -110,7 +110,7 @@ def loadSachsInterventionalDiscrete():
         else:
             data = _data
         
-    unique_idxs = [i-1 for i in unique_ints]
+    unique_idxs = [i-1 for i in unique_ints.tolist()]
     return data, i_data, [set([i]) for i in unique_idxs if i >= 0]
 
 

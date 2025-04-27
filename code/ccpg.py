@@ -20,7 +20,7 @@ def prefix_set(nodes: Set[int],
                ) -> Set[int]:
     # j
     j_set = set()
-    if i_nodes:
+    if len(i_nodes)>0:
         for i in range(len(i_nodes)):
             i_min_s = i_nodes[i] - pset
             des_i_min_s_min_i_min_s = set()
@@ -30,14 +30,15 @@ def prefix_set(nodes: Set[int],
                         if verbose: print(f"Removing {u} from the prefix set")
                         des_i_min_s_min_i_min_s.add(u)
                         break
-            j_set.union(des_i_min_s_min_i_min_s)
+            j_set = j_set.union(des_i_min_s_min_i_min_s)
             des_i_min_s_incl = des_i_min_s_min_i_min_s.union(i_min_s)
             for v in i_min_s:
                 h_s_i_v = set()
                 for u in nodes - pset.union(des_i_min_s_incl):
+                    if u in nodes - des_i_min_s_incl: continue
                     if not ci_test(u, v, nodes - des_i_min_s_incl):
                         h_s_i_v.add(u)
-                if h_s_i_v.intersection(nodes - pset):
+                if len(h_s_i_v.intersection(nodes - pset))>0:
                     if verbose: print(f"Removing {v} from the prefix set")
                     j_set.add(v)
                     
@@ -104,7 +105,7 @@ def ccpg_alg(nodes: Set[int],
     p_set: Set[int] = set()
     S: List[Set[int]] = []
     while p_set != nodes:
-        p_set = prefix_set(nodes, ci_test, p_set, i_nodes=i_nodes, i_ci_tests=i_ci_tests)
+        p_set = prefix_set(nodes, ci_test, p_set, verbose=verbose, i_nodes=i_nodes, i_ci_tests=i_ci_tests)
         # enforce termination when ci test are not perfect
         if len(S):
             if p_set == S[-1] and p_set != nodes:
