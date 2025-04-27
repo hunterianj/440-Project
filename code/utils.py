@@ -173,6 +173,7 @@ def benchmark_ccpg_against_ground_truth(
         ground_truth_graph,
         node_names = None,
         ci_test_name = "fisherz",
+        ci_test_kwargs = None,
         alpha = None,
         penalty_discount = None,
         full_graph_fn = ccpg_full_graph_connected_bidirected,
@@ -186,7 +187,8 @@ def benchmark_ccpg_against_ground_truth(
         alpha=alpha,
         penalty_discount=penalty_discount,
         ci_test_name=ci_test_name,
-        node_names=node_names
+        node_names=node_names,
+        **(ci_test_kwargs or {}),
     )
     elapsed_time = time.time() - start_time
 
