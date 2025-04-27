@@ -143,43 +143,6 @@
   },
   {
     "data_label": "continuous",
-    "ci_test_name": "kci",
-    "param_name": "alpha",
-    "param_value": 0.001,
-    "shd": 21,
-    "result_details": {
-      "shd": 21,
-      "s_metric": 0.016362680713503584,
-      "c_metric": 0.011644153384711316,
-      "sc_metric": 0.4976406926406927,
-      "runtime_sec": 244.50580382347107,
-      "graph": null,
-      "components": [
-        [
-          0,
-          1
-        ],
-        [
-          2,
-          3,
-          4
-        ],
-        [
-          5,
-          6,
-          7
-        ],
-        [
-          8,
-          9,
-          10
-        ]
-      ],
-      "edges": []
-    }
-  },
-  {
-    "data_label": "continuous",
     "ci_test_name": "rcit",
     "param_name": "alpha",
     "param_value": 0.0001,
@@ -317,107 +280,6 @@
     }
   },
   {
-    "data_label": "discrete",
-    "ci_test_name": "chisq",
-    "param_name": "alpha",
-    "param_value": 0.001,
-    "shd": 20,
-    "result_details": {
-      "shd": 20,
-      "s_metric": 0.016362680713503584,
-      "c_metric": 0.011644153384711316,
-      "sc_metric": 0.50491341991342,
-      "runtime_sec": 0.06332516670227051,
-      "graph": null,
-      "components": [
-        [
-          1
-        ],
-        [
-          2,
-          3
-        ],
-        [
-          5,
-          6,
-          7
-        ],
-        [
-          0
-        ],
-        [
-          9
-        ],
-        [
-          10
-        ],
-        [
-          4
-        ],
-        [
-          8
-        ]
-      ],
-      "edges": [
-        [
-          1,
-          6
-        ],
-        [
-          0,
-          3
-        ],
-        [
-          4,
-          7
-        ],
-        [
-          5,
-          7
-        ]
-      ]
-    }
-  },
-  {
-    "data_label": "discrete",
-    "ci_test_name": "gsq",
-    "param_name": "alpha",
-    "param_value": 0.0001,
-    "shd": 20,
-    "result_details": {
-      "shd": 20,
-      "s_metric": 0.0,
-      "c_metric": 0.0,
-      "sc_metric": 0.5182467532467532,
-      "runtime_sec": 0.04095602035522461,
-      "graph": null,
-      "components": [
-        [
-          0,
-          1
-        ],
-        [
-          2,
-          3,
-          4
-        ],
-        [
-          5,
-          6,
-          7
-        ],
-        [
-          9
-        ],
-        [
-          8,
-          10
-        ]
-      ],
-      "edges": []
-    }
-  },
-  {
     "data_label": "continuous",
     "ci_test_name": "kci",
     "param_name": "alpha",
@@ -530,6 +392,107 @@
           5
         ]
       ]
+    }
+  },
+  {
+    "data_label": "discrete",
+    "ci_test_name": "chisq",
+    "param_name": "alpha",
+    "param_value": 0.001,
+    "shd": 20,
+    "result_details": {
+      "shd": 20,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.50491341991342,
+      "runtime_sec": 0.06332516670227051,
+      "graph": null,
+      "components": [
+        [
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          0
+        ],
+        [
+          9
+        ],
+        [
+          10
+        ],
+        [
+          4
+        ],
+        [
+          8
+        ]
+      ],
+      "edges": [
+        [
+          1,
+          6
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          4,
+          7
+        ],
+        [
+          5,
+          7
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "discrete",
+    "ci_test_name": "gsq",
+    "param_name": "alpha",
+    "param_value": 0.0001,
+    "shd": 20,
+    "result_details": {
+      "shd": 20,
+      "s_metric": 0.0,
+      "c_metric": 0.0,
+      "sc_metric": 0.5182467532467532,
+      "runtime_sec": 0.04095602035522461,
+      "graph": null,
+      "components": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          4
+        ],
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          9
+        ],
+        [
+          8,
+          10
+        ]
+      ],
+      "edges": []
     }
   }
 ]

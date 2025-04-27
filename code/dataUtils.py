@@ -122,3 +122,39 @@ def loadIHDPDataset(replication: int = 0, format: IHDPFormat = IHDPFormat.TRAIN)
 
 
 sachs_ground = loadSachsGroundTruth()
+
+def tegGroundTruth():
+    # Load the adjacency matrix
+    adj_matrix = np.loadtxt('../data/TEGroundTruth.txt', delimiter='\t')
+    # print(f"teg GT shape: {adj_matrix.shape}")
+
+    # nodes 27 and 31 are missing in the data. remove them
+    keep = [i for i in range(33) if i not in [26, 30]]
+    adj_matrix = adj_matrix[np.ix_(keep, keep)]
+
+    # Create nodes
+    n_nodes = adj_matrix.shape[0]
+    node_names = [("X%d" % (i + 1)) for i in range(n_nodes)]
+    node_list = [GraphNode(name) for name in node_names]
+    ground_truth_graph = Dag(node_list)
+
+    # Create edges
+    for i in range(n_nodes):
+        for j in range(n_nodes):
+            if adj_matrix[i, j] == 1:
+                node_from = ground_truth_graph.get_node(f"X{i+1}")
+                node_to = ground_truth_graph.get_node(f"X{j+1}")
+                ground_truth_graph.add_directed_edge(node_from, node_to)
+
+    # missing_nodes = ["X27", "X31"]
+    # for node in missing_nodes:
+    #     n = ground_truth_graph.get_node(node)
+    #     if n is not None:
+    #         ground_truth_graph.remove_node(n)
+
+    return ground_truth_graph
+
+def loadTEGData():
+    data = np.loadtxt('../data/datasetTENumpy.txt', delimiter=",")
+    # print(f"teg data shape: {data.shape}")
+    return data

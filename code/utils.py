@@ -104,6 +104,97 @@ def plot_graph(graph,
     plt.savefig(filename, bbox_inches="tight", pad_inches=0.1)
 
 def plot_graph_2(graph,
+                 ax=None,
+                 figsize=(8,6),
+                 node_size=500,
+                 font_size=12,
+                 arrow_size=20,
+                 rad: float = 0.0):
+    import networkx as nx
+    from causallearn.utils.GraphUtils import GraphUtils
+    import matplotlib.pyplot as plt
+
+    graphNx = nx.DiGraph()
+    gUtils = GraphUtils()
+
+    if isinstance(graph, CausalGraph):
+        nodes = list(graph.G.get_nodes())
+        edges = graph.G.get_graph_edges()
+    else: # assume GeneralGraph
+        nodes = list(graph.get_nodes())
+        edges = graph.get_graph_edges()
+
+    directed = []
+    undirected = []
+    bidirected = []
+    for e in edges:
+        u, v = e.get_node1(), e.get_node2()
+        if gUtils.undirected(e):
+            undirected.append((u, v))
+        elif gUtils.directed(e):
+            directed.append((u, v))
+        elif gUtils.bi_directed(e):
+            bidirected.append((u, v))
+
+    graphNx.add_nodes_from(nodes)
+    graphNx.add_edges_from(directed + undirected + bidirected)
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=figsize)
+
+    pos = nx.circular_layout(graphNx)
+
+    nx.draw_networkx_nodes(graphNx, pos,
+                           node_size=node_size,
+                           node_color='C0',
+                           linewidths=1.0,
+                           edgecolors='white',
+                           ax=ax)
+    nx.draw_networkx_labels(graphNx, pos,
+                            font_size=font_size,
+                            clip_on=False,
+                            ax=ax)
+
+    if directed:
+        nx.draw_networkx_edges(graphNx, pos,
+                               edgelist=directed,
+                               arrows=True,
+                               arrowstyle='-|>',
+                               arrowsize=arrow_size,
+                               width=1.5,
+                               edge_color='k',
+                               connectionstyle=f'arc3,rad={rad}',
+                               ax=ax)
+    if undirected:
+        nx.draw_networkx_edges(graphNx, pos,
+                               edgelist=undirected,
+                               arrows=False,
+                               style='solid',
+                               width=1.5,
+                               edge_color='k',
+                               connectionstyle=f'arc3,rad={rad}',
+                               ax=ax)
+    if bidirected:
+        nx.draw_networkx_edges(graphNx, pos,
+                               edgelist=bidirected,
+                               arrows=True,
+                               arrowstyle='<|-|>',
+                               arrowsize=arrow_size,
+                               width=1.5,
+                               edge_color='k',
+                               connectionstyle=f'arc3,rad={rad}',
+                               ax=ax)
+
+    ax.set_axis_off()
+
+    if ax is None:
+        fig.tight_layout()
+        return fig, ax
+    else:
+        return None, ax
+
+
+def plot_graph_3(graph,
                figsize=(8,6),
                node_size=500,
                font_size=12,
@@ -189,9 +280,30 @@ def plot_graph_2(graph,
                                connectionstyle=f'arc3,rad={rad}')
 
     # plt.margins(0.2, 0.2)
-    ax.axis('off')
+    # ax.axis('off')
+    ax.set_axis_off()
     fig.tight_layout()
+    return fig, ax
 
+def get_ccpg_graph(components, edges, node_names=None):
+    # build graph from edges
+    k = len(components)
+    # make names like "{x,y}"
+    if node_names is None:
+        # use integer names
+        names = ["{" + ",".join(map(str, comp)) + "}" for comp in components]
+    else:
+        names = [
+            "{" + ",".join(node_names[i] for i in sorted(comp)) + "}" for comp in components
+        ]
+
+    cg = CausalGraph(k, node_names=names)
+    cg.G.remove_edges(cg.G.get_graph_edges())
+    # add edges between components
+    for (i, j) in edges:
+        cg.G.add_directed_edge(cg.G.nodes[i], cg.G.nodes[j])
+
+    return cg
 
 def ccpg_full_graph_connected_undirected(components, edges, node_names=None):
     all_nodes = set().union(*components)
@@ -268,7 +380,8 @@ def benchmark_ccpg_against_ground_truth(
         alpha = None,
         penalty_discount = None,
         full_graph_fn = ccpg_full_graph_connected_bidirected,
-        verbose = False
+        verbose = False,
+        compute_scm = True
 ):
     result = {}
     # Run CCPG
@@ -288,23 +401,26 @@ def benchmark_ccpg_against_ground_truth(
 
     # Compute metrics (structural hamming distance and s/c-metrics)
     shd = SHD(ground_truth_graph, full_graph.G)
-    scm = SCM(ground_truth_graph, full_graph.G)
-
     result["shd"] = shd.get_shd()
-    result["s_metric"] = scm.get_s_metric()
-    result["c_metric"] = scm.get_c_metric()
-    result["sc_metric"] = scm.get_sc_metric()
+
+    if compute_scm:
+        scm = SCM(ground_truth_graph, graph.G)
+        result["s_metric"] = scm.get_s_metric()
+        result["c_metric"] = scm.get_c_metric()
+        result["sc_metric"] = scm.get_sc_metric()
+
     result["runtime_sec"] = elapsed_time
-    result["graph"] = full_graph
+    result["graph"] = graph
     result["components"] = components
     result["edges"] = edges
 
     if verbose:
         print(f"Benchmark Results:")
         print(f"SHD: {result['shd']}")
-        print(f"S-metric: {result['s_metric']:.4f}")
-        print(f"C-metric: {result['c_metric']:.4f}")
-        print(f"SC-metric: {result['sc_metric']:.4f}")
+        if compute_scm:
+            print(f"S-metric: {result['s_metric']:.4f}")
+            print(f"C-metric: {result['c_metric']:.4f}")
+            print(f"SC-metric: {result['sc_metric']:.4f}")
         print(f"Runtime: {result['runtime_sec']:.2f} seconds")
 
     return result
@@ -316,7 +432,8 @@ def benchmark_pc_against_ground_truth(
         ci_test_name = "fisherz",
         ci_test_kwargs = None,
         alpha = None,
-        verbose = False
+        verbose = False,
+        compute_scm = True,
 ):
     result = {}
     # Run PC
@@ -330,15 +447,16 @@ def benchmark_pc_against_ground_truth(
         **(ci_test_kwargs or {}),
     )
     elapsed_time = time.time() - start_time
-
     # Compute metrics (structural hamming distance and s/c-metrics)
     shd = SHD(ground_truth_graph, graph.G)
-    scm = SCM(ground_truth_graph, graph.G)
-
     result["shd"] = shd.get_shd()
-    result["s_metric"] = scm.get_s_metric()
-    result["c_metric"] = scm.get_c_metric()
-    result["sc_metric"] = scm.get_sc_metric()
+
+    if compute_scm:
+        scm = SCM(ground_truth_graph, graph.G)
+        result["s_metric"] = scm.get_s_metric()
+        result["c_metric"] = scm.get_c_metric()
+        result["sc_metric"] = scm.get_sc_metric()
+
     result["runtime_sec"] = elapsed_time
     result["graph"] = graph
     result["edges"] = graph.G.get_graph_edges()
@@ -346,9 +464,10 @@ def benchmark_pc_against_ground_truth(
     if verbose:
         print(f"Benchmark Results:")
         print(f"SHD: {result['shd']}")
-        print(f"S-metric: {result['s_metric']:.4f}")
-        print(f"C-metric: {result['c_metric']:.4f}")
-        print(f"SC-metric: {result['sc_metric']:.4f}")
+        if compute_scm:
+            print(f"S-metric: {result['s_metric']:.4f}")
+            print(f"C-metric: {result['c_metric']:.4f}")
+            print(f"SC-metric: {result['sc_metric']:.4f}")
         print(f"Runtime: {result['runtime_sec']:.2f} seconds")
 
     return result
