@@ -11,7 +11,7 @@ sys.path.append("causal-learn")
 from causallearn.graph.Dag import Dag
 from causallearn.graph.GraphNode import GraphNode
 
-def loadSachsDatasetLog():
+def loadSachsDataset():
     dataset = pd.read_csv("../data/sachs/data/sachs.2005.logxplus10.continuous.txt", sep=r'\s+')
     return dataset
 
