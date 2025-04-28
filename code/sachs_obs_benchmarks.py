@@ -65,20 +65,6 @@ def run_benchmark_suite(data,
             ci_test_kwargs=ci_test_kwargs,
         )
 
-        # record = result.copy()
-        # record["graph"] = None
-        # record["components"] = [list(comp) for comp in record["components"]]
-        # record["edges"] = list(record["edges"])
-        # result_record = {
-        #     "data_label": data_label,
-        #     "ci_test_name": ci_test_name,
-        #     "param_name": param_name,
-        #     "param_value": bestParam,
-        #     "shd": record["shd"],
-        #     "result_details": record
-        # }
-        # save_result(result_record)
-
         if result["shd"] < bestSHD:
             bestSHD = result["shd"]
             bestParam = param
@@ -106,124 +92,124 @@ def run_benchmark_suite(data,
 alphas = [0.1, 0.05, 0.01, 0.001, 0.0001]
 bic_thresholds = [0.0, 1.0, 2.5, 5.0, 10.0]
 
-# # fisherz CI test on continuous data
-# run_benchmark_suite(
-#     data=continuous_obs_data,
-#     data_label="continuous",
-#     node_names=continuous_names,
-#     ci_test_name="fisherz",
-#     params=alphas,
-#     param_name="alpha"
-# )
-#
-# # fisherz CI test on log-transformed data
-# run_benchmark_suite(
-#     data=log_obs_data,
-#     data_label="log-continuous",
-#     node_names=continuous_names,
-#     ci_test_name="fisherz",
-#     params=alphas,
-#     param_name="alpha"
-# )
-#
-# # fisherz CI test on discretized data
-# run_benchmark_suite(
-#     data=discrete_obs_data,
-#     data_label="discrete",
-#     node_names=discrete_obs_data_names,
-#     ci_test_name="fisherz",
-#     params=alphas,
-#     param_name="alpha"
-# )
+# fisherz CI test on continuous data
+run_benchmark_suite(
+    data=continuous_obs_data,
+    data_label="continuous",
+    node_names=continuous_names,
+    ci_test_name="fisherz",
+    params=alphas,
+    param_name="alpha"
+)
 
-# # this isn't too bad for speed, could go for some extensive hyper-parameter tuning
+# fisherz CI test on log-transformed data
+run_benchmark_suite(
+    data=log_obs_data,
+    data_label="log-continuous",
+    node_names=continuous_names,
+    ci_test_name="fisherz",
+    params=alphas,
+    param_name="alpha"
+)
+
+# fisherz CI test on discretized data
+run_benchmark_suite(
+    data=discrete_obs_data,
+    data_label="discrete",
+    node_names=discrete_obs_data_names,
+    ci_test_name="fisherz",
+    params=alphas,
+    param_name="alpha"
+)
+
+# this isn't too bad for speed, could go for some extensive hyper-parameter tuning
+ci_test_kwargs = {
+    # "approx": "chi2",
+    # "approx": "gamma",
+    # "approx": "hbe",
+    # "approx": "lpd4", # default
+    # "approx": "perm",
+    "num_f": 200, # default = 100
+    "num_f2": 20 # default = 5
+}
+# RCIT CI test on continuous data
+run_benchmark_suite(
+    data=continuous_obs_data,
+    data_label="continuous",
+    node_names=continuous_names,
+    ci_test_name="rcit",
+    params=alphas,
+    param_name="alpha",
+    ci_test_kwargs=ci_test_kwargs
+)
+
+# Gaussian BIC custom CI test on continuous data
+run_benchmark_suite(
+    data=continuous_obs_data,
+    data_label="continuous",
+    node_names=continuous_names,
+    ci_test_name="gaussbic",
+    params=bic_thresholds,
+    param_name="threshold"
+)
+
+# Gaussian BIC custom CI test on log-transformed data
+run_benchmark_suite(
+    data=log_obs_data,
+    data_label="log-continuous",
+    node_names=continuous_names,
+    ci_test_name="gaussbic",
+    params=bic_thresholds,
+    param_name="threshold"
+)
+
+# Chi-Square CI test on discretized data
+run_benchmark_suite(
+    data=discrete_obs_data,
+    data_label="discrete",
+    node_names=discrete_obs_data_names,
+    ci_test_name="chisq",
+    params=alphas,
+    param_name="alpha"
+)
+
+# G^2 CI test on discretized data
+run_benchmark_suite(
+    data=discrete_obs_data,
+    data_label="discrete",
+    node_names=discrete_obs_data_names,
+    ci_test_name="gsq",
+    params=alphas,
+    param_name="alpha"
+)
+
 # ci_test_kwargs = {
-#     # "approx": "chi2",
-#     # "approx": "gamma",
-#     # "approx": "hbe",
-#     # "approx": "lpd4", # default
-#     # "approx": "perm",
-#     "num_f": 200, # default = 100
-#     "num_f2": 20 # default = 5
+#     "K": 5,
+#     "J": 4,
+#     # "alpha": 500,
+#     # "use_gp": True,
 # }
-# # RCIT CI test on continuous data
+# # FastKCI CI test on continuous data
 # run_benchmark_suite(
 #     data=continuous_obs_data,
 #     data_label="continuous",
 #     node_names=continuous_names,
-#     ci_test_name="rcit",
+#     ci_test_name="fastkci",
 #     params=alphas,
 #     param_name="alpha",
 #     ci_test_kwargs=ci_test_kwargs
 # )
 #
-# # Gaussian BIC custom CI test on continuous data
-# run_benchmark_suite(
-#     data=continuous_obs_data,
-#     data_label="continuous",
-#     node_names=continuous_names,
-#     ci_test_name="gaussbic",
-#     params=bic_thresholds,
-#     param_name="threshold"
-# )
-#
-# # Gaussian BIC custom CI test on log-transformed data
+# # FastKCI CI test on log-transformed data
 # run_benchmark_suite(
 #     data=log_obs_data,
 #     data_label="log-continuous",
 #     node_names=continuous_names,
-#     ci_test_name="gaussbic",
-#     params=bic_thresholds,
-#     param_name="threshold"
-# )
-#
-# # Chi-Square CI test on discretized data
-# run_benchmark_suite(
-#     data=discrete_obs_data,
-#     data_label="discrete",
-#     node_names=discrete_obs_data_names,
-#     ci_test_name="chisq",
+#     ci_test_name="fastkci",
 #     params=alphas,
-#     param_name="alpha"
+#     param_name="alpha",
+#     ci_test_kwargs=ci_test_kwargs
 # )
-#
-# # G^2 CI test on discretized data
-# run_benchmark_suite(
-#     data=discrete_obs_data,
-#     data_label="discrete",
-#     node_names=discrete_obs_data_names,
-#     ci_test_name="gsq",
-#     params=alphas,
-#     param_name="alpha"
-# )
-#
-# # ci_test_kwargs = {
-# #     "K": 5,
-# #     "J": 4,
-# #     # "alpha": 500,
-# #     # "use_gp": True,
-# # }
-# # # FastKCI CI test on continuous data
-# # run_benchmark_suite(
-# #     data=continuous_obs_data,
-# #     data_label="continuous",
-# #     node_names=continuous_names,
-# #     ci_test_name="fastkci",
-# #     params=alphas,
-# #     param_name="alpha",
-# #     ci_test_kwargs=ci_test_kwargs
-# # )
-# #
-# # # FastKCI CI test on log-transformed data
-# # run_benchmark_suite(
-# #     data=log_obs_data,
-# #     data_label="log-continuous",
-# #     node_names=continuous_names,
-# #     ci_test_name="fastkci",
-# #     params=alphas,
-# #     param_name="alpha",
-# #     ci_test_kwargs=ci_test_kwargs
-# # )
 
 # loading smaller dataset to keep runtimes relatively manageable
 log_obs_df_sm, continuous_log_df_sm = dataUtils.loadSachsObservationalSmall()
