@@ -1,0 +1,119 @@
+[
+  {
+    "data_label": "discrete",
+    "ci_test_name": "chisq",
+    "param_name": "alpha",
+    "param_value": 0.0001,
+    "shd": 18,
+    "result_details": {
+      "shd": 18,
+      "s_metric": 0.0,
+      "c_metric": 0.0,
+      "sc_metric": 0.5182467532467532,
+      "runtime_sec": 0.02806401252746582,
+      "graph": null,
+      "components": [
+        [
+          4
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          5,
+          6,
+          7
+        ],
+        [
+          8,
+          10
+        ],
+        [
+          9
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "log-continuous",
+    "ci_test_name": "gaussbic",
+    "param_name": "threshold",
+    "param_value": 0.0,
+    "shd": 50,
+    "result_details": {
+      "shd": 50,
+      "s_metric": 0.9,
+      "c_metric": 0.45395393734009487,
+      "sc_metric": 0.25084415584415587,
+      "runtime_sec": 0.11145281791687012,
+      "graph": null,
+      "components": [
+        [
+          8
+        ],
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9,
+          10
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "log-continuous",
+    "ci_test_name": "fastkci",
+    "param_name": "alpha",
+    "param_value": 0.01,
+    "shd": 42,
+    "result_details": {
+      "shd": 42,
+      "s_metric": 0.5854478483691532,
+      "c_metric": 0.2848440880397151,
+      "sc_metric": 0.36170995670995676,
+      "runtime_sec": 206.4164810180664,
+      "graph": null,
+      "components": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      ],
+      "edges": []
+    }
+  }
+]

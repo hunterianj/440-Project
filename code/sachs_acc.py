@@ -107,7 +107,7 @@ def run_benchmark_suite(data,
 
 
 # Parameters for tuning
-alphas = [0.5, 0.0001] # [0.1, 0.05, 0.01, 0.001, 0.0001]
+alphas = [0.1, 0.05, 0.01, 0.001, 0.0001]
 bic_thresholds = [0.0, 1.0, 2.5, 5.0, 10.0]
 
 # Perform discrete data analysis
@@ -116,14 +116,15 @@ disc_names = list(disc_obs_data.columns)
 
 # utils.plot_graph(d_i_cg, "sachs_discrete_i_ccpg")
 
-ci_test_kwargs = {
-    # "kernelX": "Linear", # default is Gaussian
-    # "kernelY": "Linear", # default is Gaussian
-    # "kernelZ": "Gaussian", # default is Gaussian
-    # "est_width": "median",
-    # "approx": True,
-    # "null_ss": 1000
-}
+# ci_test_kwargs = {
+#     # "kernelX": "Linear", # default is Gaussian
+#     # "kernelY": "Linear", # default is Gaussian
+#     # "kernelZ": "Gaussian", # default is Gaussian
+#     # "est_width": "median",
+#     # "approx": True,
+#     # "null_ss": 1000
+# }
+
 # chi^2 CI test on discrete data
 run_benchmark_suite(
     data=disc_obs_data.to_numpy(),
@@ -134,7 +135,7 @@ run_benchmark_suite(
     ci_test_name="chisq",
     params=alphas,
     param_name="alpha",
-    ci_test_kwargs=ci_test_kwargs
+    ci_test_kwargs={}
 )
 
 ci_tests.register_ci_tests()
@@ -155,6 +156,25 @@ run_benchmark_suite(
     param_name="threshold"
 )
 
+ci_test_kwargs = {
+    "K": 5,
+    "J": 4,
+    # "alpha": 500,
+    # "use_gp": True,
+}
+
+# FastKCI CI test on log-transformed data
+run_benchmark_suite(
+    data=cont_obs_data.to_numpy(),
+    i_data=[i_dat.to_numpy() for i_dat in cont_i_data],
+    i_nodes=cont_i_nodes,
+    data_label="log-continuous",
+    node_names=cont_names,
+    ci_test_name="fastkci",
+    params=alphas,
+    param_name="alpha",
+    ci_test_kwargs=ci_test_kwargs
+)
 
 # ground_SHD_sanity_check = SHD(sachs_ground, sachs_ground)
 # print(f"SHD: {ground_SHD_sanity_check.get_shd()}")
