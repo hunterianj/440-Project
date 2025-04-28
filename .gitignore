@@ -311,8 +311,8 @@ TSWLatexianTemp*
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
 
-/code/figs/
-/tests/data/
-/tests/figs/
+#/code/figs/
+#/tests/data/
+#/tests/figs/
 /tests/CCPG/
 /tests/simulate-data/

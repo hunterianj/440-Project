@@ -24,7 +24,7 @@ discrete_obs_data_names = continuous_names # plc is plcg in the discrete dataset
 log_obs_data = log_obs_df.values
 continuous_obs_data = continuous_log_df.values
 
-results_filename = "benchmark_results_obs.json"
+results_filename = "benchmarks/benchmark_results_obs.json"
 
 # Create file if it doesn't exist
 if not os.path.exists(results_filename):

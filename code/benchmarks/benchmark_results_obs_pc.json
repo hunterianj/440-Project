@@ -1,0 +1,568 @@
+[
+  {
+    "data_label": "continuous",
+    "ci_test_name": "fisherz",
+    "param_name": "alpha",
+    "param_value": 0.05,
+    "shd": 19,
+    "result_details": {
+      "shd": 19,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.45158008658008664,
+      "runtime_sec": 0.006073951721191406,
+      "graph": null,
+      "edges": [
+        [
+          "raf",
+          "mek"
+        ],
+        [
+          "pka",
+          "mek"
+        ],
+        [
+          "plc",
+          "pip2"
+        ],
+        [
+          "plc",
+          "pip3"
+        ],
+        [
+          "pip2",
+          "pip3"
+        ],
+        [
+          "erk",
+          "akt"
+        ],
+        [
+          "erk",
+          "pka"
+        ],
+        [
+          "akt",
+          "pka"
+        ],
+        [
+          "pkc",
+          "p38"
+        ],
+        [
+          "pkc",
+          "jnk"
+        ],
+        [
+          "p38",
+          "jnk"
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "log-continuous",
+    "ci_test_name": "fisherz",
+    "param_name": "alpha",
+    "param_value": 0.1,
+    "shd": 19,
+    "result_details": {
+      "shd": 19,
+      "s_metric": 0.23933030129774763,
+      "c_metric": 0.08073091477305765,
+      "sc_metric": 0.43880952380952387,
+      "runtime_sec": 0.010185956954956055,
+      "graph": null,
+      "edges": [
+        [
+          "raf",
+          "mek"
+        ],
+        [
+          "pip3",
+          "mek"
+        ],
+        [
+          "pka",
+          "mek"
+        ],
+        [
+          "pip2",
+          "plc"
+        ],
+        [
+          "pip3",
+          "plc"
+        ],
+        [
+          "pip3",
+          "pip2"
+        ],
+        [
+          "pka",
+          "pip2"
+        ],
+        [
+          "erk",
+          "akt"
+        ],
+        [
+          "akt",
+          "pka"
+        ],
+        [
+          "pkc",
+          "p38"
+        ],
+        [
+          "p38",
+          "jnk"
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "discrete",
+    "ci_test_name": "fisherz",
+    "param_name": "alpha",
+    "param_value": 0.0001,
+    "shd": 20,
+    "result_details": {
+      "shd": 20,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.50491341991342,
+      "runtime_sec": 0.005082130432128906,
+      "graph": null,
+      "edges": [
+        [
+          "raf",
+          "mek"
+        ],
+        [
+          "plc",
+          "pip2"
+        ],
+        [
+          "plc",
+          "pip3"
+        ],
+        [
+          "pip2",
+          "pip3"
+        ],
+        [
+          "erk",
+          "akt"
+        ],
+        [
+          "erk",
+          "pka"
+        ],
+        [
+          "akt",
+          "pka"
+        ],
+        [
+          "p38",
+          "pkc"
+        ],
+        [
+          "jnk",
+          "pkc"
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "continuous",
+    "ci_test_name": "rcit",
+    "param_name": "alpha",
+    "param_value": 0.05,
+    "shd": 19,
+    "result_details": {
+      "shd": 19,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.45158008658008664,
+      "runtime_sec": 0.005769968032836914,
+      "graph": null,
+      "edges": [
+        [
+          "raf",
+          "mek"
+        ],
+        [
+          "pka",
+          "mek"
+        ],
+        [
+          "plc",
+          "pip2"
+        ],
+        [
+          "plc",
+          "pip3"
+        ],
+        [
+          "pip2",
+          "pip3"
+        ],
+        [
+          "erk",
+          "akt"
+        ],
+        [
+          "erk",
+          "pka"
+        ],
+        [
+          "akt",
+          "pka"
+        ],
+        [
+          "pkc",
+          "p38"
+        ],
+        [
+          "pkc",
+          "jnk"
+        ],
+        [
+          "p38",
+          "jnk"
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "continuous",
+    "ci_test_name": "gaussbic",
+    "param_name": "threshold",
+    "param_value": 0.1,
+    "shd": 20,
+    "result_details": {
+      "shd": 20,
+      "s_metric": 0.14675221066175048,
+      "c_metric": 0.06525660466939157,
+      "sc_metric": 0.44110389610389616,
+      "runtime_sec": 0.006904125213623047,
+      "graph": null,
+      "edges": [
+        [
+          "raf",
+          "mek"
+        ],
+        [
+          "pip2",
+          "mek"
+        ],
+        [
+          "pka",
+          "mek"
+        ],
+        [
+          "plc",
+          "pip2"
+        ],
+        [
+          "plc",
+          "pip3"
+        ],
+        [
+          "pip2",
+          "pip3"
+        ],
+        [
+          "erk",
+          "akt"
+        ],
+        [
+          "erk",
+          "pka"
+        ],
+        [
+          "akt",
+          "pka"
+        ],
+        [
+          "pkc",
+          "p38"
+        ],
+        [
+          "pkc",
+          "jnk"
+        ],
+        [
+          "p38",
+          "jnk"
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "log-continuous",
+    "ci_test_name": "gaussbic",
+    "param_name": "threshold",
+    "param_value": 0.1,
+    "shd": 19,
+    "result_details": {
+      "shd": 19,
+      "s_metric": 0.23933030129774763,
+      "c_metric": 0.08073091477305765,
+      "sc_metric": 0.43880952380952387,
+      "runtime_sec": 0.010738849639892578,
+      "graph": null,
+      "edges": [
+        [
+          "raf",
+          "mek"
+        ],
+        [
+          "pip3",
+          "mek"
+        ],
+        [
+          "pka",
+          "mek"
+        ],
+        [
+          "pip2",
+          "plc"
+        ],
+        [
+          "pip3",
+          "plc"
+        ],
+        [
+          "pip3",
+          "pip2"
+        ],
+        [
+          "pka",
+          "pip2"
+        ],
+        [
+          "erk",
+          "akt"
+        ],
+        [
+          "akt",
+          "pka"
+        ],
+        [
+          "pkc",
+          "p38"
+        ],
+        [
+          "p38",
+          "jnk"
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "continuous",
+    "ci_test_name": "kci",
+    "param_name": "alpha",
+    "param_value": 0.001,
+    "shd": 20,
+    "result_details": {
+      "shd": 20,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.5121861471861473,
+      "runtime_sec": 0.004674196243286133,
+      "graph": null,
+      "edges": [
+        [
+          "raf",
+          "mek"
+        ],
+        [
+          "plc",
+          "pip3"
+        ],
+        [
+          "pip2",
+          "pip3"
+        ],
+        [
+          "erk",
+          "akt"
+        ],
+        [
+          "erk",
+          "pka"
+        ],
+        [
+          "akt",
+          "pka"
+        ],
+        [
+          "p38",
+          "pkc"
+        ],
+        [
+          "jnk",
+          "pkc"
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "log-continuous",
+    "ci_test_name": "kci",
+    "param_name": "alpha",
+    "param_value": 0.001,
+    "shd": 21,
+    "result_details": {
+      "shd": 21,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.5158225108225108,
+      "runtime_sec": 0.004807949066162109,
+      "graph": null,
+      "edges": [
+        [
+          "raf",
+          "mek"
+        ],
+        [
+          "plc",
+          "pip2"
+        ],
+        [
+          "plc",
+          "pip3"
+        ],
+        [
+          "pip2",
+          "pip3"
+        ],
+        [
+          "erk",
+          "akt"
+        ],
+        [
+          "akt",
+          "pka"
+        ],
+        [
+          "pkc",
+          "p38"
+        ],
+        [
+          "p38",
+          "jnk"
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "discrete",
+    "ci_test_name": "chisq",
+    "param_name": "alpha",
+    "param_value": 0.0001,
+    "shd": 20,
+    "result_details": {
+      "shd": 20,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.50491341991342,
+      "runtime_sec": 0.004698753356933594,
+      "graph": null,
+      "edges": [
+        [
+          "raf",
+          "mek"
+        ],
+        [
+          "plc",
+          "pip2"
+        ],
+        [
+          "plc",
+          "pip3"
+        ],
+        [
+          "pip2",
+          "pip3"
+        ],
+        [
+          "erk",
+          "akt"
+        ],
+        [
+          "erk",
+          "pka"
+        ],
+        [
+          "akt",
+          "pka"
+        ],
+        [
+          "p38",
+          "pkc"
+        ],
+        [
+          "jnk",
+          "pkc"
+        ]
+      ]
+    }
+  },
+  {
+    "data_label": "discrete",
+    "ci_test_name": "gsq",
+    "param_name": "alpha",
+    "param_value": 0.0001,
+    "shd": 20,
+    "result_details": {
+      "shd": 20,
+      "s_metric": 0.016362680713503584,
+      "c_metric": 0.011644153384711316,
+      "sc_metric": 0.50491341991342,
+      "runtime_sec": 0.004785776138305664,
+      "graph": null,
+      "edges": [
+        [
+          "raf",
+          "mek"
+        ],
+        [
+          "plc",
+          "pip2"
+        ],
+        [
+          "plc",
+          "pip3"
+        ],
+        [
+          "pip2",
+          "pip3"
+        ],
+        [
+          "erk",
+          "akt"
+        ],
+        [
+          "erk",
+          "pka"
+        ],
+        [
+          "akt",
+          "pka"
+        ],
+        [
+          "p38",
+          "pkc"
+        ],
+        [
+          "jnk",
+          "pkc"
+        ]
+      ]
+    }
+  }
+]
